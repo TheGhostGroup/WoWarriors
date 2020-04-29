@@ -77,6 +77,7 @@ struct RaceMask
 
     constexpr bool HasRace(uint8 raceId) const
     {
+
         return (RawValue & GetMaskForRace(raceId)) != 0;
     }
 
