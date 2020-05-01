@@ -5,6 +5,13 @@ World of Warcraft Legion 7.3.5 server core, based on TrinityCore.
 
 
 
+Mentions:
+-------------
+
+A huge thanks goes to Varjgard, who send this to me, to puplish and maintain it
+
+
+
 
 Requirements:
 -------------
@@ -228,10 +235,3 @@ Legion:
 - Trial of Valor
 - Vault of the Wardens
 - Violet Hold
-
-
-
-Mentions:
--------------
-
-A huge thanks goes to Varjgard, who send this to me, to puplish and maintain it
