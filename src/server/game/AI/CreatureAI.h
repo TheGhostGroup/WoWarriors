@@ -182,7 +182,6 @@ class TC_GAME_API CreatureAI : public UnitAI
         Creature* DoSummonFlyer(uint32 entry, WorldObject* obj, float flightZ, float radius = 5.0f, uint32 despawnTime = 30000, TempSummonType summonType = TEMPSUMMON_CORPSE_TIMED_DESPAWN);
 
         bool CheckBoundary(Position const* who = nullptr) const;
-        void SetBoundary(CreatureBoundary const* boundary);
     public:
         enum EvadeReason
         {
@@ -345,16 +344,17 @@ class TC_GAME_API CreatureAI : public UnitAI
         virtual PlayerAI* GetAIForCharmedPlayer(Player* /*who*/) { return nullptr; }
 
         // intended for encounter design/debugging. do not use for other purposes. expensive.
-        int32 VisualizeBoundary(uint32 duration, Unit* owner=nullptr, bool fill=false) const;
+        int32 VisualizeBoundary(uint32 duration, Unit* owner = nullptr, bool fill = false) const;
         virtual bool CheckInRoom();
         CreatureBoundary const* GetBoundary() const { return _boundary; }
+        void SetBoundary(CreatureBoundary const* boundary, bool negativeBoundaries = false);
 
     protected:
         virtual void MoveInLineOfSight(Unit* /*who*/);
 
         bool _EnterEvadeMode(EvadeReason why = EVADE_REASON_OTHER);
 
-        CreatureBoundary const* _boundary;
+        bool _negateBoundary;
 
         SummonList summons;
         EventMap events;
