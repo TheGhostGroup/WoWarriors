@@ -16,7 +16,7 @@
 
 WoWarriors Core is a *MMORPG* Framework based mostly in C++. Its fully based on AshamaneCore
 
-It is fully based on *TrinityCore*, with upgrades like :
+which is fully based on *TrinityCore*, with upgrades like :
 
 - Class Hall/War Campaign Basics (WIP)
 - World Quests
