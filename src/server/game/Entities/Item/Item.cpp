@@ -777,7 +777,7 @@ void Item::SaveToDB(CharacterDatabaseTransaction& trans)
 
             // Delete the items if this is a container
             if (!loot.isLooted())
-                ItemContainerDeleteLootMoneyAndLootItemsFromDB();
+                sLootItemStorage->RemoveStoredLootForContainer(GetGUID().GetCounter());
 
             delete this;
             return;
@@ -1086,7 +1086,7 @@ void Item::DeleteFromDB(CharacterDatabaseTransaction& trans)
 
     // Delete the items if this is a container
     if (!loot.isLooted())
-        ItemContainerDeleteLootMoneyAndLootItemsFromDB();
+    sLootItemStorage->RemoveStoredLootForContainer(GetGUID().GetCounter());
 }
 
 /*static*/
