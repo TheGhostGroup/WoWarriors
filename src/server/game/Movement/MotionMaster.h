@@ -68,6 +68,7 @@ enum MovementGeneratorType : uint8
     EFFECT_MOTION_TYPE              = 16,
     NULL_MOTION_TYPE                = 17,
     SPLINE_CHAIN_MOTION_TYPE        = 18,                 // SplineChainMovementGenerator.h
+    FORMATION_MOTION_TYPE           = 19,                 // FormationMovementGenerator.h
     MAX_MOTION_TYPE                                       // limit
 };
 
@@ -186,6 +187,9 @@ class TC_GAME_API MotionMaster
         void MovePath(uint32 path_id, bool repeatable);
         void MoveRotate(uint32 time, RotateDirection direction);
         void MoveBackward(uint32 id, float x, float y, float z, float speed = 0.0f);
+
+        void MoveFormation(uint32 id, Position destination, uint32 moveType, bool forceRun = false, bool forceOrientation = false);
+
 
     private:
         void pop();

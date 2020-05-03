@@ -42,7 +42,7 @@ struct SellerItemClassSharedInfo
 {
     uint32 PriceRatio = 0;
     uint32 RandomStackRatio = 100;
-}
+};
 
 struct SellerItemQualitySharedInfo
 {

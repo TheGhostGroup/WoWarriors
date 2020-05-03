@@ -349,11 +349,14 @@ class TC_GAME_API CreatureAI : public UnitAI
         CreatureBoundary const* GetBoundary() const { return _boundary; }
         void SetBoundary(CreatureBoundary const* boundary, bool negativeBoundaries = false);
 
+        static bool IsInBounds(CreatureBoundary const& boundary, Position const* who);
+
     protected:
         virtual void MoveInLineOfSight(Unit* /*who*/);
 
         bool _EnterEvadeMode(EvadeReason why = EVADE_REASON_OTHER);
 
+        CreatureBoundary const* _boundary;
         bool _negateBoundary;
 
         SummonList summons;

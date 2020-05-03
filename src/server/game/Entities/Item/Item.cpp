@@ -27,6 +27,7 @@
 #include "DatabaseEnv.h"
 #include "DB2Stores.h"
 #include "GameTables.h"
+#include "Item.h"
 #include "ItemEnchantmentMgr.h"
 #include "ItemPackets.h"
 #include "Log.h"

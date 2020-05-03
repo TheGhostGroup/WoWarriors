@@ -229,7 +229,7 @@ void TempSummon::InitStats(uint32 duration)
     if (m_Properties->Faction)
         SetFaction(m_Properties->Faction);
     else if (IsVehicle() && owner) // properties should be vehicle
-        SetFaction(owner->getFaction());
+        SetFaction(owner->GetFaction());
 }
 
 void TempSummon::InitSummon(Spell const* summonSpell /*= nullptr*/)

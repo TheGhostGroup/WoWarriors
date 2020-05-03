@@ -694,7 +694,7 @@ void BattlegroundIC::HandleCapturedNodes(ICNodePoint* node, bool recapture)
                     continue;
 
                 if (AddCreature(node->faction == TEAM_ALLIANCE ? NPC_GLAIVE_THROWER_A : NPC_GLAIVE_THROWER_H, type, BG_IC_DocksVehiclesGlaives[i], node->faction, RESPAWN_ONE_DAY))
-                    GetBGCreature(type)->setFaction(BG_IC_Factions[(node->faction == TEAM_ALLIANCE ? 0 : 1)]);
+                    GetBGCreature(type)->SetFaction(BG_IC_Factions[(node->faction == TEAM_ALLIANCE ? 0 : 1)]);
             }
 
             // spawning catapults
@@ -706,7 +706,7 @@ void BattlegroundIC::HandleCapturedNodes(ICNodePoint* node, bool recapture)
                     continue;
 
                 if (AddCreature(NPC_CATAPULT, type, BG_IC_DocksVehiclesCatapults[i], node->faction, RESPAWN_ONE_DAY))
-                    GetBGCreature(type)->setFaction(BG_IC_Factions[(node->faction == TEAM_ALLIANCE ? 0 : 1)]);
+                    GetBGCreature(type)->SetFaction(BG_IC_Factions[(node->faction == TEAM_ALLIANCE ? 0 : 1)]);
             }
             break;
         case BG_IC_GO_WORKSHOP_BANNER:
