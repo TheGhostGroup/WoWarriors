@@ -377,7 +377,7 @@ struct boss_aggramar : public BossAI
         {
             case NPC_EMBER_OF_TAESHALACH:
             {
-                summon->setFaction(me->getFaction());
+                summon->SetFaction(me->GetFaction());
                 summon->GetMotionMaster()->MovePoint(1, Position(-12634.2f, -2255.2478f, 2514.2617f, 4.674f));
                 break;
             }

@@ -286,7 +286,7 @@ class npc_groog : public CreatureScript
 
             void Reset() override
             {
-                me->setFaction(14);
+                me->SetFaction(14);
             }
 
             void EnterCombat(Unit* /*p_Victim*/) override

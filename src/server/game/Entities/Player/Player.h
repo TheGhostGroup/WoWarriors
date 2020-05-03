@@ -2025,7 +2025,7 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
         bool IsInAlliance() const { return m_team == ALLIANCE; }
         bool IsInHorde() const { return m_team == HORDE; }
         TeamId GetTeamId() const { return m_team == ALLIANCE ? TEAM_ALLIANCE : TEAM_HORDE; }
-        void setFactionForRace(uint8 race);
+        void SetFactionForRace(uint8 race);
 
         uint32 GetNativeTeam() const { return TeamForRace(getRace()); }
         TeamId GetNativeTeamId() const { return TeamIdForRace(getRace()); }

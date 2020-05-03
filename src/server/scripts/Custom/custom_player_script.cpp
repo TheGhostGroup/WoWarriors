@@ -105,7 +105,7 @@ public:
             player->SetReputation(530, 42999);
             player->SetReputation(947, 42999);
         }
-        if (player->getFaction() == 4)
+        if (player->GetFaction() == 4)
         {
             player->SetReputation((76), 42999);
         }

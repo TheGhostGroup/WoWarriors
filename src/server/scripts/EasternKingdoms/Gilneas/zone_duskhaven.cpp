@@ -582,7 +582,7 @@ public:
         {
             me->AddUnitFlag(UnitFlags(UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_IMMUNE_TO_NPC | UNIT_FLAG_NOT_SELECTABLE));
             me->SetReactState(REACT_PASSIVE);
-            me->setFaction(1735);
+            me->SetFaction(1735);
         }
 
         void PassengerBoarded(Unit* passenger, int8 seatId, bool apply) override
@@ -601,7 +601,7 @@ public:
                     npc->AddUnitFlag(UnitFlags(UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_IMMUNE_TO_NPC | UNIT_FLAG_NOT_SELECTABLE));
                     m_events.ScheduleEvent(EVENT_CAST_BOULDER, urand(100, 5000));
                     m_events.ScheduleEvent(EVENT_CHECK_PLAYER, 1000);
-                    me->setFaction(1735);
+                    me->SetFaction(1735);
                     me->AddUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
                 }
             }
@@ -619,7 +619,7 @@ public:
                     m_events.CancelEvent(EVENT_CAST_BOULDER);
                     m_events.CancelEvent(EVENT_CHECK_PLAYER);
                     m_events.ScheduleEvent(EVENT_MASTER_RESET, 180000);
-                    me->setFaction(35);
+                    me->SetFaction(35);
                     me->RemoveAllAuras();
                     me->HandleEmoteCommand(EMOTE_ONESHOT_NONE);
                     me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
@@ -2321,7 +2321,7 @@ public:
         void MoveInLineOfSight(Unit* who) override
         {
             if (!m_cast_cooldown)
-                if (who->ToPlayer() || who->getFaction() == 2203 || who->getFaction() == 2163)
+                if (who->ToPlayer() || who->GetFaction() == 2203 || who->GetFaction() == 2163)
                     if (me->GetDistance(who) < 60.0f)
                     {
                         me->SetFacingToObject(who);
