@@ -1,7 +1,7 @@
 #include <map>
 
 #include "Config.h"
-#include "chat.h"
+#include "Chat.h"
 #include "DB2Stores.h"
 #include "ScriptMgr.h"
 #include "Unit.h"
