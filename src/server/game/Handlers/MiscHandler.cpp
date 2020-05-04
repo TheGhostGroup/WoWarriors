@@ -1023,7 +1023,7 @@ void WorldSession::HandlePlayerSelectFactionOpcode(WorldPackets::Misc::PlayerSel
     if (playerSelectFaction.SelectedFaction == WorldPackets::Misc::PlayerSelectFaction::Values::Horde)
     {
         _player->SetRace(RACE_PANDAREN_HORDE);
-        _player->SetFactionForRace(RACE_PANDAREN_HORDE);
+        _player->setFactionForRace(RACE_PANDAREN_HORDE);
         _player->SaveToDB();
         WorldLocation location(1, 1366.730f, -4371.248f, 26.070f, 3.1266f);
         _player->TeleportTo(location);
@@ -1034,7 +1034,7 @@ void WorldSession::HandlePlayerSelectFactionOpcode(WorldPackets::Misc::PlayerSel
     else if (playerSelectFaction.SelectedFaction == WorldPackets::Misc::PlayerSelectFaction::Values::Alliance)
     {
         _player->SetRace(RACE_PANDAREN_ALLIANCE);
-        _player->SetFactionForRace(RACE_PANDAREN_ALLIANCE);
+        _player->setFactionForRace(RACE_PANDAREN_ALLIANCE);
         _player->SaveToDB();
         WorldLocation location(0, -9096.236f, 411.380f, 92.257f, 3.649f);
         _player->TeleportTo(location);
@@ -1171,7 +1171,7 @@ void WorldSession::HandleSelectFactionOpcode(WorldPackets::Misc::FactionSelect& 
     if (selectFaction.FactionChoice == JOIN_ALLIANCE)
     {
         _player->SetRace(RACE_PANDAREN_ALLIANCE);
-        _player->SetFactionForRace(RACE_PANDAREN_ALLIANCE);
+        _player->setFactionForRace(RACE_PANDAREN_ALLIANCE);
         _player->SaveToDB();
         _player->LearnSpell(668, false);            // Language Common
         _player->LearnSpell(108130, false);         // Language Pandaren Alliance
@@ -1180,7 +1180,7 @@ void WorldSession::HandleSelectFactionOpcode(WorldPackets::Misc::FactionSelect& 
     else if (selectFaction.FactionChoice == JOIN_HORDE)
     {
         _player->SetRace(RACE_PANDAREN_HORDE);
-        _player->SetFactionForRace(RACE_PANDAREN_HORDE);
+        _player->setFactionForRace(RACE_PANDAREN_HORDE);
         _player->SaveToDB();
         _player->LearnSpell(669, false);            // Language Orcish
         _player->LearnSpell(108131, false);         // Language Pandaren Horde

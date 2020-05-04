@@ -199,7 +199,7 @@ void TempSummon::InitStats(uint32 duration)
 
     if (owner && IsTrigger() && m_spells[0])
     {
-        SetFaction(owner->GetFaction());
+        setFaction(owner->getFaction());
         SetLevel(owner->getLevel());
         if (owner->GetTypeId() == TYPEID_PLAYER)
             m_ControlledByPlayer = true;
@@ -227,9 +227,9 @@ void TempSummon::InitStats(uint32 duration)
     }
 
     if (m_Properties->Faction)
-        SetFaction(m_Properties->Faction);
+        setFaction(m_Properties->Faction);
     else if (IsVehicle() && owner) // properties should be vehicle
-        SetFaction(owner->GetFaction());
+        setFaction(owner->getFaction());
 }
 
 void TempSummon::InitSummon(Spell const* summonSpell /*= nullptr*/)
@@ -333,7 +333,7 @@ void Minion::InitStats(uint32 duration)
     SetReactState(REACT_PASSIVE);
 
     SetCreatorGUID(GetOwner()->GetGUID());
-    SetFaction(GetOwner()->GetFaction());
+    setFaction(GetOwner()->getFaction());
 
     GetOwner()->SetMinion(this, true);
 }

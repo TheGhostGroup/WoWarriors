@@ -2113,7 +2113,7 @@ void Spell::EffectSummonType(SpellEffIndex effIndex)
                         if (properties->Control == SUMMON_CATEGORY_ALLY)
                         {
                             summon->SetOwnerGUID(m_originalCaster->GetGUID());
-                            summon->SetFaction(m_originalCaster->GetFaction());
+                            summon->setFaction(m_originalCaster->getFaction());
                             summon->SetCreatedBySpell(m_spellInfo->Id);
                         }
 
@@ -2154,9 +2154,9 @@ void Spell::EffectSummonType(SpellEffIndex effIndex)
 
             uint32 faction = properties->Faction;
             if (!faction)
-                faction = m_originalCaster->GetFaction();
+                faction = m_originalCaster->getFaction();
 
-            summon->SetFaction(faction);
+            summon->setFaction(faction);
             break;
     }
 
@@ -3724,7 +3724,7 @@ void Spell::EffectDuel(SpellEffIndex effIndex)
 
     PhasingHandler::InheritPhaseShift(go, m_caster);
 
-    go->SetFaction(m_caster->GetFaction());
+    go->SetFaction(m_caster->getFaction());
     go->SetLevel(m_caster->getLevel()+1);
     int32 duration = m_spellInfo->CalcDuration(m_caster);
     go->SetRespawnTime(duration > 0 ? duration/IN_MILLISECONDS : 0);
@@ -4961,7 +4961,7 @@ void Spell::EffectTransmitted(SpellEffIndex effIndex)
     {
         case GAMEOBJECT_TYPE_FISHINGNODE:
         {
-            go->SetFaction(m_caster->GetFaction());
+            go->SetFaction(m_caster->getFaction());
             ObjectGuid bobberGuid = go->GetGUID();
             // client requires fishing bobber guid in channel object slot 0 to be usable
             m_caster->SetChannelObject(0, bobberGuid);
@@ -5414,9 +5414,9 @@ void Spell::EffectGameObjectDamage(SpellEffIndex /*effIndex*/)
         return;
 
     FactionTemplateEntry const* casterFaction = caster->GetFactionTemplateEntry();
-    FactionTemplateEntry const* tarGetFaction = sFactionTemplateStore.LookupEntry(gameObjTarget->GetFaction());
+    FactionTemplateEntry const* targetFaction = sFactionTemplateStore.LookupEntry(gameObjTarget->GetFaction());
     // Do not allow to damage GO's of friendly factions (ie: Wintergrasp Walls/Ulduar Storm Beacons)
-    if (!tarGetFaction || (casterFaction && tarGetFaction && !casterFaction->IsFriendlyTo(tarGetFaction)))
+    if (!targetFaction || (casterFaction && targetFaction && !casterFaction->IsFriendlyTo(targetFaction)))
         gameObjTarget->ModifyHealth(-damage, caster, GetSpellInfo()->Id);
 }
 
@@ -5485,7 +5485,7 @@ void Spell::SummonGuardian(uint32 i, uint32 entry, SummonPropertiesEntry const* 
             ((Guardian*)summon)->InitStatsForLevel(level);
 
         if (properties && properties->Control == SUMMON_CATEGORY_ALLY)
-            summon->SetFaction(caster->GetFaction());
+            summon->setFaction(caster->getFaction());
 
         if (summon->HasUnitTypeMask(UNIT_MASK_MINION) && m_targets.HasDst())
             ((Minion*)summon)->SetFollowAngle(m_caster->GetAngle(summon));

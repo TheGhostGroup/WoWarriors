@@ -53,7 +53,7 @@ struct boss_king_ranulf : public BossAI
 
     void sGossipSelect(Player* /*player*/, uint32 /*menuId*/, uint32 /*gossipListId*/) override
     {
-        me->SetFaction(14);
+        me->setFaction(14);
         me->SetReactState(REACT_DEFENSIVE);
         me->RemoveUnitFlag(UnitFlags(UNIT_FLAG_NON_ATTACKABLE));
         me->RemoveUnitFlag(UnitFlags(UNIT_FLAG_NOT_SELECTABLE));
@@ -132,7 +132,7 @@ struct boss_king_ranulf : public BossAI
                 if (Creature* creature = me->FindNearestCreature(101326, 50.0f))
                 {
                     creature->SetLevel(110);
-                    creature->SetFaction(14);
+                    creature->setFaction(14);
                     creature->GetMotionMaster()->MovePoint(0, me->GetPosition(), true);
                 }
                 events.ScheduleEvent(EVENT_CALL_ANCESTOR, 16000);
@@ -174,7 +174,7 @@ struct boss_king_haldor : public BossAI
 
     void sGossipSelect(Player* /*player*/, uint32 /*menuId*/, uint32 /*gossipListId*/) override
     {
-        me->SetFaction(14);
+        me->setFaction(14);
         me->SetReactState(REACT_DEFENSIVE);
         me->RemoveUnitFlag(UnitFlags(UNIT_FLAG_NON_ATTACKABLE));
         me->RemoveUnitFlag(UnitFlags(UNIT_FLAG_NOT_SELECTABLE));
@@ -253,7 +253,7 @@ struct boss_king_haldor : public BossAI
                 if (Creature* creature = me->FindNearestCreature(101326, 50.0f))
                 {
                     creature->SetLevel(110);
-                    creature->SetFaction(14);
+                    creature->setFaction(14);
                     creature->GetMotionMaster()->MovePoint(0, me->GetPosition(), true);
                 }
                 events.ScheduleEvent(EVENT_CALL_ANCESTOR, 16000);
@@ -297,7 +297,7 @@ struct boss_king_bjorn : public BossAI
 
     void sGossipSelect(Player* /*player*/, uint32 /*menuId*/, uint32 /*gossipListId*/)
     {
-        me->SetFaction(14);
+        me->setFaction(14);
         me->SetReactState(REACT_DEFENSIVE);
         me->RemoveUnitFlag(UnitFlags(UNIT_FLAG_NON_ATTACKABLE));
         me->RemoveUnitFlag(UnitFlags(UNIT_FLAG_NOT_SELECTABLE));
@@ -376,7 +376,7 @@ struct boss_king_bjorn : public BossAI
                 if (Creature* creature = me->FindNearestCreature(101326, 50.0f))
                 {
                     creature->SetLevel(110);
-                    creature->SetFaction(14);
+                    creature->setFaction(14);
                     creature->GetMotionMaster()->MovePoint(0, me->GetPosition(), true);
                 }
                 events.ScheduleEvent(EVENT_CALL_ANCESTOR, 16000);
@@ -416,7 +416,7 @@ struct boss_king_tor : public BossAI
 
     void sGossipSelect(Player* /*player*/, uint32 /*menuId*/, uint32 /*gossipListId*/) override
     {
-        me->SetFaction(14);
+        me->setFaction(14);
         me->SetReactState(REACT_DEFENSIVE);
         me->RemoveUnitFlag(UnitFlags(UNIT_FLAG_NON_ATTACKABLE));
         me->RemoveUnitFlag(UnitFlags(UNIT_FLAG_NOT_SELECTABLE));
@@ -497,7 +497,7 @@ struct boss_king_tor : public BossAI
                 if (Creature* creature = me->FindNearestCreature(101326, 50.0f))
                 {
                     creature->SetLevel(110);
-                    creature->SetFaction(14);
+                    creature->setFaction(14);
                     creature->GetMotionMaster()->MovePoint(0, me->GetPosition(), true);
                 }
                 events.ScheduleEvent(EVENT_CALL_ANCESTOR, 16000);

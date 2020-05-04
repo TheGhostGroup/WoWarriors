@@ -765,7 +765,7 @@ public:
                 {
                     if (Creature* flame = me->SummonCreature(FLAME_OF_AZZINOTH, GlaivePosition[i+2], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000))
                     {
-                        flame->SetFaction(me->GetFaction()); // Just in case the database has it as a different faction
+                        flame->setFaction(me->getFaction()); // Just in case the database has it as a different faction
                         flame->SetMeleeDamageSchool(SPELL_SCHOOL_FIRE);
                         FlameGUID[i] = flame->GetGUID(); // Record GUID in order to check if they're dead later on to move to the next phase
                         ENSURE_AI(npc_flame_of_azzinoth::flame_of_azzinothAI, flame->AI())->SetGlaiveGUID(GlaiveGUID[i]);
@@ -812,7 +812,7 @@ public:
                             GlaiveGUID[i] = Glaive->GetGUID();
                             Glaive->AddUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
                             Glaive->SetDisplayId(MODEL_INVISIBLE);
-                            Glaive->SetFaction(me->GetFaction());
+                            Glaive->setFaction(me->getFaction());
                             DoCast(Glaive, SPELL_THROW_GLAIVE2);
                         }
                     }
@@ -828,7 +828,7 @@ public:
                             GlaiveGUID[i] = Glaive->GetGUID();
                             Glaive->AddUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
                             Glaive->SetDisplayId(MODEL_INVISIBLE);
-                            Glaive->SetFaction(me->GetFaction());
+                            Glaive->setFaction(me->getFaction());
                             DoCast(Glaive, SPELL_THROW_GLAIVE, true);
                         }
                     }

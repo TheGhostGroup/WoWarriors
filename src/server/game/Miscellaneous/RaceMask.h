@@ -77,28 +77,23 @@ struct RaceMask
 
     constexpr bool HasRace(uint8 raceId) const
     {
-        if (raceId >= MAX_RACES || raceBits[raceId] < 0 || raceBits[raceId] >= 64)
-            return false;
-
-        return (RawValue & (T(1) << raceBits[raceId])) != 0;
+        return (RawValue & GetMaskForRace(raceId)) != 0;
     }
 
     static constexpr T GetMaskForRace(uint8 raceId)
     {
-        return raceId < MAX_RACES ? (T(1) << raceBits[raceId]) : T(0);
+        constexpr int32 raceBits[MAX_RACES] =
+        {
+            0, 0, 1, 2, 3, 4, 5, 6, 7, 8,
+            9, 10, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, 21, -1, 23, 24, 25, 26, 27, 28,
+            29, 30, 31, -1, 11, 12, 13, 14
+        };
+        return raceId < MAX_RACES && raceBits[raceId] >= 0 && raceBits[raceId] < 64 ? (T(1) << raceBits[raceId]) : T(0);
     }
 
     constexpr operator bool() const { return RawValue != T(0); }
     constexpr bool operator!() const { return !operator bool(); }
-
-private:
-    static constexpr int32 raceBits[MAX_RACES] =
-    {
-        0, 0, 1, 2, 3, 4, 5, 6, 7, 8,
-        9, 10, -1, -1, -1, -1, -1, -1, -1, -1,
-        -1, -1, 21, -1, 23, 24, 25, 26, 27, 28,
-        29, 30, 31, -1, 11, 12, 13, 14
-    };
 };
 }
 

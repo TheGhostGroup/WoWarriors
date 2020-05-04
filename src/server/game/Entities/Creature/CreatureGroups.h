@@ -19,7 +19,6 @@
 #define _FORMATIONS_H
 
 #include "Define.h"
-#include "Position.h"
 #include "ObjectGuid.h"
 #include <unordered_map>
 #include <map>
@@ -93,7 +92,7 @@ class TC_GAME_API CreatureGroup
 
         void MoveGroupTo(float x, float y, float z, bool fightMove = false);
 
-        void LeaderMoveTo(Position destination, uint32 id = 0, uint32 moveType = 0, bool orientation = false);
+        void LeaderMoveTo(float x, float y, float z);
         void MemberAttackStart(Creature* member, Unit* target);
 
         void CheckWipe(Creature* killed);

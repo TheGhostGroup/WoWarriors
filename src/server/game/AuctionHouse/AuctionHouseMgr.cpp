@@ -653,7 +653,7 @@ void AuctionHouseMgr::AddAItem(Item* item)
     _itemsByGuid[item->GetGUID()] = item;
 }
 
-bool AuctionHouseMgr::RemoveAItem(ObjectGuid id, bool deleteItem /*= false*/, CharacterDatabaseTransaction* trans /*= nullptr*/)
+bool AuctionHouseMgr::RemoveAItem(ObjectGuid id, bool deleteItem)
 {
     auto i = _itemsByGuid.find(id);
     if (i == _itemsByGuid.end())
@@ -661,9 +661,9 @@ bool AuctionHouseMgr::RemoveAItem(ObjectGuid id, bool deleteItem /*= false*/, Ch
 
     if (deleteItem)
     {
-        ASSERT(trans);
+        CharacterDatabaseTransaction trans = CharacterDatabaseTransaction(nullptr);
         i->second->FSetState(ITEM_REMOVED);
-        i->second->SaveToDB(*trans);
+        i->second->SaveToDB(trans);
     }
 
     _itemsByGuid.erase(i);
@@ -1850,7 +1850,7 @@ void AuctionHouseObject::SendAuctionWon(AuctionPosting const* auction, Player* b
     {
         // bidder doesn't exist, delete the item
         for (Item* item : auction->Items)
-            sAuctionMgr->RemoveAItem(item->GetGUID(), true, &trans);
+            sAuctionMgr->RemoveAItem(item->GetGUID(), true);
     }
 }
 
@@ -1902,7 +1902,7 @@ void AuctionHouseObject::SendAuctionExpired(AuctionPosting const* auction, Chara
     {
         // owner doesn't exist, delete the item
         for (Item* item : auction->Items)
-            sAuctionMgr->RemoveAItem(item->GetGUID(), true, &trans);
+            sAuctionMgr->RemoveAItem(item->GetGUID(), true);
     }
 }
 

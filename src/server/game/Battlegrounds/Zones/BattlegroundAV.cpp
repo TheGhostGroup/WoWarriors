@@ -342,7 +342,7 @@ Creature* BattlegroundAV::AddAVCreature(uint16 cinfoid, uint16 type)
     {
         if (Creature* trigger = AddCreature(WORLD_TRIGGER, triggerSpawnID, BG_AV_CreaturePos[triggerSpawnID]))
         {
-            trigger->SetFaction(newFaction);
+            trigger->setFaction(newFaction);
             trigger->CastSpell(trigger, SPELL_HONORABLE_DEFENDER_25Y, false);
         }
     }
@@ -779,7 +779,7 @@ void BattlegroundAV::PopulateNode(BG_AV_Nodes node)
             DelCreature(node + 302);
             return;
         }
-        trigger->SetFaction(owner == ALLIANCE ? 84 : 83);
+        trigger->setFaction(owner == ALLIANCE ? 84 : 83);
         trigger->CastSpell(trigger, SPELL_HONORABLE_DEFENDER_25Y, false);
     }
 }

@@ -179,9 +179,9 @@ void CreatureAI::TriggerAlert(Unit const* who) const
     me->SendAIReaction(AI_REACTION_ALERT);
 
     // Face the unit (stealthed player) and set distracted state for 5 seconds
-    me->GetMotionMaster()->MoveDistract(5 * IN_MILLISECONDS);
+    me->SetFacingTo(me->GetAngle(who->GetPositionX(), who->GetPositionY()), true);
     me->StopMoving();
-    me->SetFacingTo(me->GetAngle(who));
+    me->GetMotionMaster()->MoveDistract(5 * IN_MILLISECONDS);
 }
 
 void CreatureAI::EnterEvadeMode(EvadeReason why)
@@ -223,7 +223,7 @@ void CreatureAI::SetGazeOn(Unit* target)
 {
     if (me->IsValidAttackTarget(target))
     {
-        if (!me->IsFocusing(nullptr, true) && target != me->GetVictim())
+        if (!me->IsFocusing(nullptr, true))
             AttackStart(target);
         me->SetReactState(REACT_PASSIVE);
     }
@@ -243,7 +243,7 @@ bool CreatureAI::UpdateVictimWithGaze()
     }
 
     if (Unit* victim = me->SelectVictim())
-        if (!me->IsFocusing(nullptr, true) && victim != me->GetVictim())
+        if (!me->IsFocusing(nullptr, true))
             AttackStart(victim);
 
     return me->GetVictim() != nullptr;
@@ -257,7 +257,7 @@ bool CreatureAI::UpdateVictim()
     if (!me->HasReactState(REACT_PASSIVE))
     {
         if (Unit* victim = me->SelectVictim())
-            if (!me->IsFocusing(nullptr, true) && victim != me->GetVictim())
+            if (!me->IsFocusing(nullptr, true))
                 AttackStart(victim);
 
         return me->GetVictim() != nullptr;
@@ -370,28 +370,20 @@ int32 CreatureAI::VisualizeBoundary(uint32 duration, Unit* owner, bool fill) con
 
 bool CreatureAI::CheckBoundary(Position const* who) const
 {
-    if (!_boundary)
-        return true;
-
     if (!who)
         who = me;
 
-    return (CreatureAI::IsInBounds(*_boundary, who) != _negateBoundary);
-}
-
-bool CreatureAI::IsInBounds(CreatureBoundary const& boundary, Position const* pos)
-{
-    for (AreaBoundary const* areaBoundary : boundary)
-        if (!areaBoundary->IsWithinBoundary(pos))
-            return false;
+    if (_boundary)
+        for (AreaBoundary const* boundary : *_boundary)
+            if (!boundary->IsWithinBoundary(who))
+                return false;
 
     return true;
 }
 
-void CreatureAI::SetBoundary(CreatureBoundary const* boundary, bool negateBoundaries /*= false*/)
+void CreatureAI::SetBoundary(CreatureBoundary const* boundary)
 {
     _boundary = boundary;
-    _negateBoundary = negateBoundaries;
     me->DoImmediateBoundaryCheck();
 }
 

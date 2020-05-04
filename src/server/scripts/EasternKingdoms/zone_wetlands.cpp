@@ -88,7 +88,7 @@ public:
                     if (me->HasStealthAura())
                         me->RemoveAurasByType(SPELL_AURA_MOD_STEALTH);
                     SetRun();
-                    me->SetFaction(FACTION_ENEMY);
+                    me->setFaction(FACTION_ENEMY);
                     break;
             }
         }

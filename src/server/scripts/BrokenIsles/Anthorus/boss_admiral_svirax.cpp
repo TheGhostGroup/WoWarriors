@@ -236,7 +236,7 @@ struct boss_admiral_svirax : public BossAI
         case NPC_CHIEF_ENGINEER_ISHKAR:
         case NPC_GENERAL_ERODUS:
         {
-            summon->SetFaction(me->GetFaction());
+            summon->setFaction(me->getFaction());
             break;
         }
         }

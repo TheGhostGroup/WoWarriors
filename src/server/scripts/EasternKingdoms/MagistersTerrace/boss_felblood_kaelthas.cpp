@@ -452,7 +452,7 @@ public:
             Initialize();
 
             me->AddUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
-            me->SetFaction(14);
+            me->setFaction(14);
 
             DoCast(me, SPELL_FLAMESTRIKE2, true);
         }
@@ -658,7 +658,7 @@ public:
 
             me->AddUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
             me->SetDisableGravity(true);
-            me->SetFaction(14);
+            me->setFaction(14);
             DoCast(me, SPELL_ARCANE_SPHERE_PASSIVE, true);
         }
 

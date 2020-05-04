@@ -3177,7 +3177,7 @@ public:
 
             if (TempSummon* tempSumm = caster->SummonCreature(WORLD_TRIGGER, at->GetPosition(), TEMPSUMMON_TIMED_DESPAWN, 200))
             {
-                tempSumm->SetFaction(caster->GetFaction());
+                tempSumm->setFaction(caster->getFaction());
                 tempSumm->SetSummonerGUID(caster->GetGUID());
                 PhasingHandler::InheritPhaseShift(tempSumm, caster);
                 tempSumm->CastCustomSpell(SPELL_SHAMAN_EARTHQUAKE_DAMAGE, SPELLVALUE_BASE_POINT0, caster->GetTotalSpellPowerValue(SPELL_SCHOOL_MASK_NORMAL, false) * 0.3, caster, TRIGGERED_FULL_MASK);

@@ -4926,7 +4926,7 @@ void AuraEffect::HandleAuraModFaction(AuraApplication const* aurApp, uint8 mode,
 
     if (apply)
     {
-        target->SetFaction(GetMiscValue());
+        target->setFaction(GetMiscValue());
         if (target->GetTypeId() == TYPEID_PLAYER)
             target->RemoveUnitFlag(UNIT_FLAG_PVP_ATTACKABLE);
     }

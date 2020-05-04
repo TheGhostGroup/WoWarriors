@@ -111,7 +111,7 @@ public:
                 //Cast
                 me->HandleEmoteCommand(EMOTE_ONESHOT_SUBMERGE);
                 me->AddUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
-                me->SetFaction(35);
+                me->setFaction(35);
                 DoCast(me, SPELL_DIRTMOUND_PASSIVE);
 
                 Submerged = true;
@@ -134,7 +134,7 @@ public:
             if (Submerged && Back_Timer <= diff)
             {
                 me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
-                me->SetFaction(14);
+                me->setFaction(14);
 
                 DoCastVictim(SPELL_GROUND_RUPTURE);
 

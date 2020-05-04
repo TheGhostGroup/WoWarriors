@@ -848,7 +848,7 @@ public:
                     {
                         if (TempSummon* Xan = me->SummonCreature(NPC_XAN, VoidRealmEventPos[0], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60 * 60 * IN_MILLISECONDS))
                         {
-                            Xan->SetFaction(14);
+                            Xan->setFaction(14);
                             Xan->SetReactState(REACT_AGGRESSIVE);
                         }
                     }

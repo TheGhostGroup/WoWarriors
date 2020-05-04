@@ -358,7 +358,7 @@ class boss_lady_deathwhisper : public CreatureScript
                 {
                     if (darnavan->IsAlive())
                     {
-                        darnavan->SetFaction(35);
+                        darnavan->setFaction(35);
                         darnavan->CombatStop(true);
                         darnavan->GetMotionMaster()->MoveIdle();
                         darnavan->SetReactState(REACT_PASSIVE);

@@ -184,22 +184,22 @@ void ReputationMgr::SendForceReactions()
 
 void ReputationMgr::SendState(FactionState const* faction)
 {
-    WorldPackets::Reputation::SetFactionStanding SetFactionStanding;
-    SetFactionStanding.ReferAFriendBonus = 0.0f;
-    SetFactionStanding.BonusFromAchievementSystem = 0.0f;
-    SetFactionStanding.Faction.emplace_back(int32(faction->ReputationListID), faction->Standing);
+    WorldPackets::Reputation::SetFactionStanding setFactionStanding;
+    setFactionStanding.ReferAFriendBonus = 0.0f;
+    setFactionStanding.BonusFromAchievementSystem = 0.0f;
+    setFactionStanding.Faction.emplace_back(int32(faction->ReputationListID), faction->Standing);
     for (FactionStateList::iterator itr = _factions.begin(); itr != _factions.end(); ++itr)
     {
         if (itr->second.needSend)
         {
             itr->second.needSend = false;
             if (itr->second.ReputationListID != faction->ReputationListID)
-                SetFactionStanding.Faction.emplace_back(int32(itr->second.ReputationListID), itr->second.Standing);
+                setFactionStanding.Faction.emplace_back(int32(itr->second.ReputationListID), itr->second.Standing);
         }
     }
 
-    SetFactionStanding.ShowVisual = _sendFactionIncreased;
-    _player->SendDirectMessage(SetFactionStanding.Write());
+    setFactionStanding.ShowVisual = _sendFactionIncreased;
+    _player->SendDirectMessage(setFactionStanding.Write());
 
     _sendFactionIncreased = false; // Reset
 }

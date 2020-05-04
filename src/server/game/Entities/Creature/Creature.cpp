@@ -540,7 +540,7 @@ bool Creature::UpdateEntry(uint32 entry, CreatureData const* data /*= nullptr*/,
     if (!GetCreatureAddon())
         SetSheath(SHEATH_STATE_MELEE);
 
-    SetFaction(cInfo->faction);
+    setFaction(cInfo->faction);
 
     uint64 npcFlags;
     uint32 unitFlags, unitFlags2, unitFlags3, dynamicFlags;
@@ -594,7 +594,7 @@ bool Creature::UpdateEntry(uint32 entry, CreatureData const* data /*= nullptr*/,
     {
         if (Player* owner = Creature::GetCharmerOrOwnerPlayerOrPlayerItself()) // this check comes in case we don't have a player
         {
-            SetFaction(owner->GetFaction()); // vehicles should have same as owner faction
+            setFaction(owner->getFaction()); // vehicles should have same as owner faction
             owner->VehicleSpellInitialize();
         }
     }
@@ -668,18 +668,7 @@ void Creature::Update(uint32 diff)
                     if (targetGuid == dbtableHighGuid) // if linking self, never respawn (check delayed to next day)
                         SetRespawnTime(DAY);
                     else
-                        {
-                        // else copy time from master and add a little
-                        time_t baseRespawnTime = std::max(linkedRespawntime, now);
-                        time_t const offset = urand(5, MINUTE);
-
-                        // linked guid can be a boss, uses std::numeric_limits<time_t>::max to never respawn in that instance
-                        // we shall inherit it instead of adding and causing an overflow
-                        if (baseRespawnTime <= std::numeric_limits<time_t>::max() - offset)
-                            m_respawnTime = baseRespawnTime + offset;
-                        else
-                            m_respawnTime = std::numeric_limits<time_t>::max();
-                    }
+                        m_respawnTime = (now > linkedRespawntime ? now : linkedRespawntime) + urand(5, MINUTE); // else copy time from master and add a little
                     SaveRespawnTime(); // also save to DB immediately
                 }
             }
@@ -714,10 +703,10 @@ void Creature::Update(uint32 diff)
                 if (!m_suppressedTarget.IsEmpty())
                 {
                     if (WorldObject const* objTarget = ObjectAccessor::GetWorldObject(*this, m_suppressedTarget))
-                        SetFacingToObject(objTarget, false);
+                        SetFacingToObject(objTarget);
                 }
                 else
-                    SetFacingTo(m_suppressedOrientation, false);
+                    SetFacingTo(m_suppressedOrientation);
                 m_shouldReacquireTarget = false;
             }
 
@@ -2504,7 +2493,7 @@ bool Creature::CanAssistTo(const Unit* u, const Unit* enemy, bool checkfaction /
     // only from same creature faction
     if (checkfaction)
     {
-        if (GetFaction() != u->GetFaction())
+        if (getFaction() != u->getFaction())
             return false;
     }
     else
@@ -3280,10 +3269,10 @@ void Creature::FocusTarget(Spell const* focusSpell, WorldObject const* target)
 
     // Face the target - we need to do this before the unit state is modified for no-turn spells
     if (target)
-        SetFacingToObject(target, false);
+        SetFacingToObject(target);
     else if (!canTurnDuringCast)
         if (Unit* victim = GetVictim())
-            SetFacingToObject(victim, false); // ensure orientation is correct at beginning of cast
+            SetFacingToObject(victim); // ensure orientation is correct at beginning of cast
 
     if (!canTurnDuringCast)
         AddUnitState(UNIT_STATE_CANNOT_TURN);
@@ -3329,10 +3318,10 @@ void Creature::ReleaseFocus(Spell const* focusSpell, bool withDelay)
         if (!m_suppressedTarget.IsEmpty())
         {
             if (WorldObject const* objTarget = ObjectAccessor::GetWorldObject(*this, m_suppressedTarget))
-                SetFacingToObject(objTarget, false);
+                SetFacingToObject(objTarget);
         }
         else
-            SetFacingTo(m_suppressedOrientation, false);
+            SetFacingTo(m_suppressedOrientation);
     }
     else
         // tell the creature that it should reacquire its actual target after the delay expires (this is handled in ::Update)
@@ -3345,27 +3334,6 @@ void Creature::ReleaseFocus(Spell const* focusSpell, bool withDelay)
     m_focusSpell = nullptr;
     m_focusDelay = (!IsPet() && withDelay) ? GameTime::GetGameTimeMS() : 0; // don't allow re-target right away to prevent visual bugs
 }
-
-bool Creature::IsMovementPreventedByCasting() const
-{
-    // first check if currently a movement allowed channel is active and we're not casting
-    if (Spell* spell = m_currentSpells[CURRENT_CHANNELED_SPELL])
-    {
-        if (spell->getState() != SPELL_STATE_FINISHED && spell->IsChannelActive())
-            if (spell->GetSpellInfo()->IsMoveAllowedChannel())
-                if (HasUnitState(UNIT_STATE_CASTING))
-                    return true;
-    }
-
-    if (const_cast<Creature*>(this)->IsFocusing(nullptr, true))
-        return true;
-
-    if (HasUnitState(UNIT_STATE_CASTING))
-        return true;
-
-    return false;
-}
-
 
 void Creature::StartPickPocketRefillTimer()
 {

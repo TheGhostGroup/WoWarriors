@@ -87,7 +87,7 @@ public:
                     me->SetEmoteState(EMOTE_STATE_STUN);
                     me->CombatStop();                      // stop combat
                     me->DeleteThreatList();                // unsure of this
-                    me->SetFaction(FACTION_HORDE_GENERIC); // horde generic
+                    me->setFaction(FACTION_HORDE_GENERIC); // horde generic
 
                     bReset = true;
                     Reset_Timer = 60000;
@@ -105,7 +105,7 @@ public:
                 {
                     EnterEvadeMode();
                     bReset = false;
-                    me->SetFaction(FACTION_TROLL_BLOODSCALP); // troll, bloodscalp
+                    me->setFaction(FACTION_TROLL_BLOODSCALP); // troll, bloodscalp
                     return;
                 }
 

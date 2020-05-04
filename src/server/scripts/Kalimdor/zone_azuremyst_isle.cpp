@@ -199,7 +199,7 @@ public:
         npc_engineer_spark_overgrindAI(Creature* creature) : ScriptedAI(creature)
         {
             Initialize();
-            NormFaction = creature->GetFaction();
+            NormFaction = creature->getFaction();
             NpcFlags = (uint32)creature->m_unitData->NpcFlags[0];
         }
 
@@ -218,7 +218,7 @@ public:
         {
             Initialize();
 
-            me->SetFaction(NormFaction);
+            me->setFaction(NormFaction);
             me->AddNpcFlag(NPCFlags(NpcFlags));
         }
 
@@ -230,7 +230,7 @@ public:
         void sGossipSelect(Player* player, uint32 /*menuId*/, uint32 /*gossipListId*/) override
         {
             CloseGossipMenuFor(player);
-            me->SetFaction(FACTION_HOSTILE);
+            me->setFaction(FACTION_HOSTILE);
             me->Attack(player, true);
         }
 
@@ -401,7 +401,7 @@ public:
                     case EVENT_ACCEPT_QUEST:
                         if (Player* player = ObjectAccessor::GetPlayer(*me, _player))
                             Talk(SAY_START, player);
-                        me->SetFaction(FACTION_QUEST);
+                        me->setFaction(FACTION_QUEST);
                         _events.ScheduleEvent(EVENT_START_ESCORT, Seconds(1));
                         break;
                     case EVENT_START_ESCORT:

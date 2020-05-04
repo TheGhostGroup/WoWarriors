@@ -2015,7 +2015,7 @@ Creature* WorldObject::SummonTrigger(float x, float y, float z, float ang, uint3
     //summon->SetName(GetName());
     if (GetTypeId() == TYPEID_PLAYER || GetTypeId() == TYPEID_UNIT)
     {
-        summon->SetFaction(((Unit*)this)->GetFaction());
+        summon->setFaction(((Unit*)this)->getFaction());
         summon->SetLevel(((Unit*)this)->getLevel());
     }
 

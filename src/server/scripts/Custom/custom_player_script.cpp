@@ -81,56 +81,22 @@ public:
     }
 };
 
-class TempFixesworldofwarriors : public PlayerScript
-{
-
-public:
-    TempFixesworldofwarriors() : PlayerScript("TempFixesworldofwarriors")
-    {
-    }
-
-    // run at first login of a new character
-    void OnLogin(Player* player, bool firstLogin) override
-    {
-        /*
-        if (player->getRace() == RACE_VULPERA)
-        {
-            player->LearnSpell(669, false);         // Language Orcish
-            player->SetReputation((76), 42999);
-            player->SetReputation(68, 42999);
-            player->SetReputation(81, 42999);
-            player->SetReputation(911, 42999);
-            player->SetReputation(729, 42999);
-            player->SetReputation(941, 42999);
-            player->SetReputation(530, 42999);
-            player->SetReputation(947, 42999);
-        }
-        if (player->GetFaction() == 4)
-        {
-            player->SetReputation((76), 42999);
-        }
-        */
-    }
-};
-
 // TODO : this script is temp fix,
 // remove it when lordaeron battle is properly fixed
-
 class OnBfaArrival : public PlayerScript
 {
 public:
-
     OnBfaArrival() : PlayerScript("OnBfaArrival") { }
 
     enum
     {
-        QUEST_DYING_WORLD_A = 52946,
-        QUEST_DYING_WORLD_H = 53028,
+        QUEST_DYING_WORLD_A                 = 52946,
+        QUEST_DYING_WORLD_H                 = 53028,
 
-        SPELL_CREATE_WAR_CAMPAIGN_H = 273381,
-        SPELL_CREATE_WAR_CAMPAIGN_A = 273382,
+        SPELL_CREATE_WAR_CAMPAIGN_H         = 273381,
+        SPELL_CREATE_WAR_CAMPAIGN_A         = 273382,
 
-        CONVERSATION_MAGNI_DYING_WORLD = 9316,
+        CONVERSATION_MAGNI_DYING_WORLD      = 9316,
     };
 
     void OnLogin(Player* player, bool /*firstLogin*/) override
@@ -158,16 +124,10 @@ public:
                 player->AddQuest(quest, nullptr);
         }
     }
-
 };
 
 void AddSC_custom_player_script()
 {
     RegisterPlayerScript(playerscript_recruiter);
     RegisterPlayerScript(OnBfaArrival);
-    RegisterPlayerScript(TempFixesworldofwarriors);
-}
-
-void AddSC_TempFixesworldofwarriors() {
-    new TempFixesworldofwarriors();
 }

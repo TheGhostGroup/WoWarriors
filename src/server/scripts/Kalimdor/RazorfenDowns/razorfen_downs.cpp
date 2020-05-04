@@ -136,7 +136,7 @@ public:
                 eventInProgress = true;
                 Talk(SAY_QUEST_ACCEPTED);
                 me->RemoveNpcFlag(UNIT_NPC_FLAG_QUESTGIVER);
-                me->SetFaction(FACTION_ESCORT);
+                me->setFaction(FACTION_ESCORT);
                 me->GetMotionMaster()->MovePath(PATH_ESCORT, false);
             }
         }

@@ -2315,7 +2315,7 @@ public:
 
             if (TempSummon* tempSumm = caster->SummonCreature(WORLD_TRIGGER, at->GetPositionX(), at->GetPositionY(), at->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 200))
             {
-                tempSumm->SetFaction(caster->GetFaction());
+                tempSumm->setFaction(caster->getFaction());
                 tempSumm->SetSummonerGUID(caster->GetGUID());
                 PhasingHandler::InheritPhaseShift(tempSumm, caster);
 

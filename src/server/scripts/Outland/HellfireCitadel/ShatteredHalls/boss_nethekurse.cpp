@@ -207,7 +207,7 @@ class boss_grand_warlock_nethekurse : public CreatureScript
 
             void JustSummoned(Creature* summoned) override
             {
-                summoned->SetFaction(16);
+                summoned->setFaction(16);
                 summoned->AddUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
                 summoned->AddUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
 

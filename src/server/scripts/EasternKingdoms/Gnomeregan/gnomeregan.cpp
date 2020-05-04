@@ -130,7 +130,7 @@ public:
             {
                 Start(true, false, player->GetGUID());
 
-                me->SetFaction(player->GetFaction());
+                me->setFaction(player->getFaction());
                 SetData(1, 0);
 
                 player->PlayerTalkClass->SendCloseGossip();
@@ -225,8 +225,8 @@ public:
         {
             //just in case
             if (GetPlayerForEscort())
-                if (me->GetFaction() != GetPlayerForEscort()->GetFaction())
-                    me->SetFaction(GetPlayerForEscort()->GetFaction());
+                if (me->getFaction() != GetPlayerForEscort()->getFaction())
+                    me->setFaction(GetPlayerForEscort()->getFaction());
 
             switch (waypointId)
             {
