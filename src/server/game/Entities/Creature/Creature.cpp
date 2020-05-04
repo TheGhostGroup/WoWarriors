@@ -159,6 +159,20 @@ CreatureModel const* CreatureTemplate::GetFirstVisibleModel() const
     return &CreatureModel::DefaultVisibleModel;
 }
 
+std::pair<int16, int16> CreatureTemplate::GetMinMaxLevel() const
+{
+    return
+    {
+        HealthScalingExpansion != EXPANSION_LEVEL_CURRENT ? minlevel : minlevel + MAX_LEVEL,
+        HealthScalingExpansion != EXPANSION_LEVEL_CURRENT ? maxlevel : maxlevel + MAX_LEVEL
+    };
+}
+
+int32 CreatureTemplate::GetHealthScalingExpansion() const
+{
+    return HealthScalingExpansion == EXPANSION_LEVEL_CURRENT ? CURRENT_EXPANSION : HealthScalingExpansion;
+}
+
 CreatureLevelScaling const* CreatureTemplate::GetLevelScaling(uint8 difficulty) const
 {
     std::unordered_map<uint8, CreatureLevelScaling>::const_iterator it = scalingStore.find(difficulty);
@@ -1465,8 +1479,9 @@ void Creature::SelectLevel()
     CreatureTemplate const* cInfo = GetCreatureTemplate();
 
     // level
-    uint8 minlevel = std::min(cInfo->maxlevel, cInfo->minlevel);
-    uint8 maxlevel = std::max(cInfo->maxlevel, cInfo->minlevel);
+    std::pair<int16, int16> levels = cInfo->GetMinMaxLevel();
+    uint8 minlevel = std::min(levels.first, levels.second);
+    uint8 maxlevel = std::max(levels.first, levels.second);
     uint8 level = minlevel == maxlevel ? minlevel : urand(minlevel, maxlevel);
 
     if (HasScalableLevels())
@@ -2831,9 +2846,9 @@ uint64 Creature::GetMaxHealthByLevel(uint8 level) const
     CreatureTemplate const* cInfo = GetCreatureTemplate();
     CreatureLevelScaling const* scaling = cInfo->GetLevelScaling(GetMap()->GetDifficultyID());
 
-    float ExpectedHealth = sDB2Manager.EvaluateExpectedStat(ExpectedStatType::CreatureHealth, level, cInfo->HealthScalingExpansion, scaling->ContentTuningID, Classes(cInfo->unit_class));
+    float baseHealth = sDB2Manager.EvaluateExpectedStat(ExpectedStatType::CreatureHealth, level, cInfo->GetHealthScalingExpansion(), scaling->ContentTuningID, Classes(cInfo->unit_class));
 
-    return ExpectedHealth * cInfo->ModHealth * cInfo->ModHealthExtra;
+    return baseHealth * cInfo->ModHealth * cInfo->ModHealthExtra;
 }
 
 float Creature::GetHealthMultiplierForTarget(WorldObject const* target) const
@@ -2853,7 +2868,7 @@ float Creature::GetBaseDamageForLevel(uint8 level) const
     CreatureTemplate const* cInfo = GetCreatureTemplate();
     CreatureLevelScaling const* scaling = cInfo->GetLevelScaling(GetMap()->GetDifficultyID());
 
-    return sDB2Manager.EvaluateExpectedStat(ExpectedStatType::CreatureAutoAttackDps, level, cInfo->HealthScalingExpansion, scaling->ContentTuningID, Classes(cInfo->unit_class));
+    return sDB2Manager.EvaluateExpectedStat(ExpectedStatType::CreatureAutoAttackDps, level, cInfo->GetHealthScalingExpansion(), scaling->ContentTuningID, Classes(cInfo->unit_class));
 }
 
 float Creature::GetDamageMultiplierForTarget(WorldObject const* target) const
@@ -2871,9 +2886,10 @@ float Creature::GetBaseArmorForLevel(uint8 level) const
     CreatureTemplate const* cInfo = GetCreatureTemplate();
     CreatureLevelScaling const* scaling = cInfo->GetLevelScaling(GetMap()->GetDifficultyID());
 
-    float ExpectedArmor = sDB2Manager.EvaluateExpectedStat(ExpectedStatType::CreatureArmor, level, cInfo->HealthScalingExpansion, scaling->ContentTuningID, Classes(cInfo->unit_class));
+    float baseArmor = sDB2Manager.EvaluateExpectedStat(ExpectedStatType::CreatureArmor, level, cInfo->GetHealthScalingExpansion(), scaling->ContentTuningID, Classes(cInfo->unit_class));
 
-    return ExpectedArmor * cInfo->ModArmor;
+
+    return baseArmor * cInfo->ModArmor;
 }
 
 float Creature::GetArmorMultiplierForTarget(WorldObject const* target) const
@@ -2900,12 +2916,28 @@ uint8 Creature::GetLevelForTarget(WorldObject const* target) const
         // between UNIT_FIELD_SCALING_LEVEL_MIN and UNIT_FIELD_SCALING_LEVEL_MAX
         if (HasScalableLevels())
         {
-            uint8 targetLevelWithDelta = unitTarget->GetEffectiveLevel() + m_unitData->ScalingLevelDelta;
+            int32 scalingLevelMin = m_unitData->ScalingLevelMin;
+            int32 scalingLevelMax = m_unitData->ScalingLevelMax;
+            int32 scalingLevelDelta = m_unitData->ScalingLevelDelta;
+            int32 scalingFactionGroup = m_unitData->ScalingFactionGroup;
+            int32 targetLevel = unitTarget->m_unitData->EffectiveLevel;
+            if (!targetLevel)
+                targetLevel = unitTarget->getLevel();
 
-            if (target->IsPlayer())
-                targetLevelWithDelta += target->ToPlayer()->m_activePlayerData->ScalingPlayerLevelDelta;
+            int32 targetLevelDelta = 0;
 
-            return RoundToInterval<uint8>(targetLevelWithDelta, m_unitData->ScalingLevelMin, m_unitData->ScalingLevelMax);
+            if (Player const* playerTarget = target->ToPlayer())
+            {
+                if (scalingFactionGroup && sFactionTemplateStore.AssertEntry(sChrRacesStore.AssertEntry(playerTarget->getRace())->FactionID)->FactionGroup != scalingFactionGroup)
+                    scalingLevelMin = scalingLevelMax;
+
+                int32 maxCreatureScalingLevel = playerTarget->m_activePlayerData->MaxCreatureScalingLevel;
+                targetLevelDelta = std::min(maxCreatureScalingLevel > 0 ? maxCreatureScalingLevel - targetLevel : 0, *playerTarget->m_activePlayerData->ScalingPlayerLevelDelta);
+            }
+
+            int32 levelWithDelta = targetLevel + targetLevelDelta;
+            int32 level = RoundToInterval(levelWithDelta, scalingLevelMin, scalingLevelMax) + scalingLevelDelta;
+            return RoundToInterval(level, 1, MAX_LEVEL + 3);
         }
     }
 
