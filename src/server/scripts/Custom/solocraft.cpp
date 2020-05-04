@@ -1,6 +1,7 @@
 #include <map>
 
 #include "Config.h"
+#include "chat.h"
 #include "DB2Stores.h"
 #include "ScriptMgr.h"
 #include "Unit.h"
@@ -9,8 +10,7 @@
 #include "Map.h"
 #include "Group.h"
 #include "InstanceScript.h"
-#include <Chat\Chat.h>
-#include <Logging\Log.h>
+#include "Log.h"
 
 /*
  * TODO:
