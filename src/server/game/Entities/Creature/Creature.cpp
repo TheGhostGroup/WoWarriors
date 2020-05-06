@@ -25,6 +25,7 @@
 #include "CreatureAISelector.h"
 #include "CreatureGroups.h"
 #include "DatabaseEnv.h"
+#include "DB2Stores.h"
 #include "Formulas.h"
 #include "GameEventMgr.h"
 #include "GameTime.h"
@@ -173,28 +174,6 @@ int32 CreatureTemplate::GetHealthScalingExpansion() const
     return HealthScalingExpansion == EXPANSION_LEVEL_CURRENT ? CURRENT_EXPANSION : HealthScalingExpansion;
 }
 
-CreatureLevelScaling const* CreatureTemplate::GetLevelScaling(uint8 difficulty) const
-{
-    std::unordered_map<uint8, CreatureLevelScaling>::const_iterator it = scalingStore.find(difficulty);
-
-    if (it != scalingStore.end())
-        return &(it->second);
-
-    struct DefaultCreatureLevelScaling : public CreatureLevelScaling
-    {
-        DefaultCreatureLevelScaling()
-        {
-            MinLevel = 0;
-            MaxLevel = 0;
-            DeltaLevelMin = 0;
-            DeltaLevelMax = 0;
-            ContentTuningID = 0;
-        }
-    };
-    static const DefaultCreatureLevelScaling defScaling;
-    return &defScaling;
-}
-
 void CreatureTemplate::InitializeQueryData()
 {
     WorldPacket queryTemp;
@@ -266,6 +245,27 @@ WorldPacket CreatureTemplate::BuildQueryData(LocaleConstant loc) const
         }
 
     return *queryTemp.Write();
+}
+
+CreatureLevelScaling const* CreatureTemplate::GetLevelScaling(Difficulty difficulty) const
+{
+    auto it = scalingStore.find(difficulty);
+    if (it != scalingStore.end())
+        return &it->second;
+
+    struct DefaultCreatureLevelScaling : public CreatureLevelScaling
+    {
+        DefaultCreatureLevelScaling()
+        {
+            MinLevel = 0;
+            MaxLevel = 0;
+            DeltaLevelMin = 0;
+            DeltaLevelMax = 0;
+            ContentTuningID = 0;
+        }
+    };
+    static const DefaultCreatureLevelScaling defScaling;
+    return &defScaling;
 }
 
 bool AssistDelayEvent::Execute(uint64 /*e_time*/, uint32 /*p_time*/)
@@ -1479,32 +1479,26 @@ void Creature::SelectLevel()
     CreatureTemplate const* cInfo = GetCreatureTemplate();
 
     // level
-    std::pair<int16, int16> levels = cInfo->GetMinMaxLevel();
-    uint8 minlevel = std::min(levels.first, levels.second);
-    uint8 maxlevel = std::max(levels.first, levels.second);
+    uint8 minlevel = std::min(cInfo->maxlevel, cInfo->minlevel);
+    uint8 maxlevel = std::max(cInfo->maxlevel, cInfo->minlevel);
     uint8 level = minlevel == maxlevel ? minlevel : urand(minlevel, maxlevel);
-
-    if (HasScalableLevels())
-    {
-        level = maxlevel;
-
-        CreatureLevelScaling const* scaling = cInfo->GetLevelScaling(GetMap()->GetDifficultyID());
-
-        SetUpdateFieldValue(m_values.ModifyValue(&Unit::m_unitData).ModifyValue(&UF::UnitData::ScalingLevelMin), scaling->MinLevel);
-        SetUpdateFieldValue(m_values.ModifyValue(&Unit::m_unitData).ModifyValue(&UF::UnitData::ScalingLevelMax), scaling->MaxLevel);
-
-        int8 mindelta = std::min(scaling->DeltaLevelMax, scaling->DeltaLevelMin);
-        int8 maxdelta = std::max(scaling->DeltaLevelMax, scaling->DeltaLevelMin);
-        int8 delta = mindelta == maxdelta ? mindelta : irand(mindelta, maxdelta);
-
-        SetUpdateFieldValue(m_values.ModifyValue(&Unit::m_unitData).ModifyValue(&UF::UnitData::ScalingLevelDelta), delta);
-        SetUpdateFieldValue(m_values.ModifyValue(&Unit::m_unitData).ModifyValue(&UF::UnitData::ContentTuningID), scaling->ContentTuningID);
-    }
-
     SetLevel(level);
+
+    CreatureLevelScaling const* scaling = cInfo->GetLevelScaling(GetMap()->GetDifficultyID());
+
+    SetUpdateFieldValue(m_values.ModifyValue(&Unit::m_unitData).ModifyValue(&UF::UnitData::ScalingLevelMin), scaling->MinLevel);
+    SetUpdateFieldValue(m_values.ModifyValue(&Unit::m_unitData).ModifyValue(&UF::UnitData::ScalingLevelMax), scaling->MaxLevel);
+
+    int32 mindelta = std::min(scaling->DeltaLevelMax, scaling->DeltaLevelMin);
+    int32 maxdelta = std::max(scaling->DeltaLevelMax, scaling->DeltaLevelMin);
+    int32 delta = mindelta == maxdelta ? mindelta : irand(mindelta, maxdelta);
+
+    SetUpdateFieldValue(m_values.ModifyValue(&Unit::m_unitData).ModifyValue(&UF::UnitData::ScalingLevelDelta), delta);
+    SetUpdateFieldValue(m_values.ModifyValue(&Unit::m_unitData).ModifyValue(&UF::UnitData::ContentTuningID), scaling->ContentTuningID);
 
     UpdateLevelDependantStats();
 }
+
 
 void Creature::UpdateLevelDependantStats()
 {

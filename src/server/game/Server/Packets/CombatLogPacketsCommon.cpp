@@ -72,7 +72,7 @@ namespace WorldPackets
             TargetItemLevel = 0;
             ScalingHealthItemLevelCurveID = target->m_unitData->ScalingHealthItemLevelCurveID;
             TargetLevel = target->getLevel();
-            Expansion = creatureTemplate->RequiredExpansion;
+            Expansion = creatureTemplate->HealthScalingExpansion;
             TargetMinScalingLevel = uint8(creatureScaling->MinLevel);
             TargetMaxScalingLevel = uint8(creatureScaling->MaxLevel);
             TargetScalingLevelDelta = int8(attacker->m_unitData->ScalingLevelDelta);
@@ -91,7 +91,7 @@ namespace WorldPackets
             TargetItemLevel = 0;
             ScalingHealthItemLevelCurveID = target->m_unitData->ScalingHealthItemLevelCurveID;
             TargetLevel = target->getLevel();
-            Expansion = creatureTemplate->RequiredExpansion;
+            Expansion = creatureTemplate->HealthScalingExpansion;
             TargetMinScalingLevel = uint8(creatureScaling->MinLevel);
             TargetMaxScalingLevel = uint8(creatureScaling->MaxLevel);
             TargetScalingLevelDelta = int8(target->m_unitData->ScalingLevelDelta);
@@ -109,7 +109,7 @@ namespace WorldPackets
             PlayerLevelDelta = 0;
             PlayerItemLevel = 0;
             TargetLevel = target->getLevel();
-            Expansion = creatureTemplate->RequiredExpansion;
+            Expansion = creatureTemplate->HealthScalingExpansion;
             TargetMinScalingLevel = uint8(creatureScaling->MinLevel);
             TargetMaxScalingLevel = uint8(creatureScaling->MaxLevel);
             TargetScalingLevelDelta = int8(accessor->m_unitData->ScalingLevelDelta);

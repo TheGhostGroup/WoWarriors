@@ -769,9 +769,9 @@ void ObjectMgr::LoadCreatureScalingData()
         Field* fields = result->Fetch();
 
         uint32 entry = fields[0].GetUInt32();
-        uint32 difficulty = fields[1].GetUInt8();
+        Difficulty difficulty = Difficulty(fields[1].GetUInt8());
 
-        CreatureTemplateContainer::iterator itr = _creatureTemplateStore.find(entry);
+        auto itr = _creatureTemplateStore.find(entry);
         if (itr == _creatureTemplateStore.end())
         {
             TC_LOG_ERROR("sql.sql", "Creature template (Entry: %u) does not exist but has a record in `creature_template_scaling`", entry);
@@ -2371,7 +2371,8 @@ ObjectGuid::LowType ObjectMgr::AddCreatureData(uint32 entry, uint32 mapId, float
     data.spawntimesecs = spawntimedelay;
     data.spawndist = 0;
     data.currentwaypoint = 0;
-    data.curhealth = sDB2Manager.EvaluateExpectedStat(ExpectedStatType::CreatureHealth, level, cInfo->GetHealthScalingExpansion(), scaling->ContentTuningID, Classes(cInfo->unit_class)) * cInfo->ModHealth * cInfo->ModHealthExtra;    data.curmana = stats->GenerateMana(cInfo);
+    data.curhealth = sDB2Manager.EvaluateExpectedStat(ExpectedStatType::CreatureHealth, level, cInfo->GetHealthScalingExpansion(), scaling->ContentTuningID, Classes(cInfo->unit_class)) * cInfo->ModHealth * cInfo->ModHealthExtra;
+    data.curmana = stats->GenerateMana(cInfo);
     data.movementType = cInfo->MovementType;
     data.spawnDifficulties.push_back(DIFFICULTY_NONE);
     data.dbData = false;
@@ -3693,16 +3694,16 @@ void ObjectMgr::LoadPlayerInfo()
     {
         struct RaceStats
         {
-            int16 raceStats[MAX_STATS];
+            int16 StatModifier[MAX_STATS];
         };
 
-        std::map<uint8, RaceStats> raceStatStore;
+        std::array<RaceStats, MAX_RACES> raceStatModifiers;
 
         uint32 oldMSTime = getMSTime();
 
-        QueryResult result1 = WorldDatabase.Query("SELECT race, str, agi, sta, inte FROM player_racestats");
+        QueryResult raceStatsResult = WorldDatabase.Query("SELECT race, str, agi, sta, inte FROM player_racestats");
 
-        if (!result1)
+        if (!raceStatsResult)
         {
             TC_LOG_ERROR("server.loading", ">> Loaded 0 race stats definitions. DB table `player_racestats` is empty.");
             exit(1);
@@ -3710,7 +3711,7 @@ void ObjectMgr::LoadPlayerInfo()
 
         do
         {
-            Field* fields = result1->Fetch();
+            Field* fields = raceStatsResult->Fetch();
 
             uint32 current_race = fields[0].GetUInt8();
             if (current_race >= MAX_RACES)
@@ -3719,17 +3720,13 @@ void ObjectMgr::LoadPlayerInfo()
                 continue;
             }
 
-            RaceStats raceStats;
+            for (uint32 i = 0; i < MAX_STATS; ++i)
+                raceStatModifiers[current_race].StatModifier[i] = fields[i + 1].GetInt16();
 
-            for (int i = 0; i < MAX_STATS; i++)
-                raceStats.raceStats[i] = fields[i + 1].GetInt16();
-
-            raceStatStore[current_race] = raceStats;
-
-        } while (result1->NextRow());
+        } while (raceStatsResult->NextRow());
 
         //                                                  0      1     2    3    4    5
-        QueryResult result  = WorldDatabase.Query("SELECT class, level, str, agi, sta, inte FROM player_classlevelstats");
+        QueryResult result = WorldDatabase.Query("SELECT class, level, str, agi, sta, inte FROM player_classlevelstats");
 
         if (!result)
         {
@@ -3756,23 +3753,21 @@ void ObjectMgr::LoadPlayerInfo()
                 if (current_level > STRONG_MAX_LEVEL)        // hardcoded level maximum
                     TC_LOG_ERROR("sql.sql", "Wrong (> %u) level %u in `player_classlevelstats` table, ignoring.", STRONG_MAX_LEVEL, current_level);
                 else
-                {
-                    TC_LOG_INFO("misc", "Unused (> MaxPlayerLevel in worldserver.conf) level %u in `player_levelstats` table, ignoring.", current_level);
-                    ++count;                                // make result loading percent "expected" correct in case disabled detail mode for example.
-                }
+                    TC_LOG_INFO("misc", "Unused (> MaxPlayerLevel in worldserver.conf) level %u in `player_classlevelstats` table, ignoring.", current_level);
+
                 continue;
             }
 
-            for (std::map<uint8, RaceStats>::iterator itr = raceStatStore.begin(); itr != raceStatStore.end(); itr++)
+            for (std::size_t race = 0; race < raceStatModifiers.size(); ++race)
             {
-                if (PlayerInfo* info = _playerInfo[itr->first][current_class])
+                if (PlayerInfo* info = _playerInfo[race][current_class])
                 {
                     if (!info->levelInfo)
                         info->levelInfo = new PlayerLevelInfo[sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL)];
 
                     PlayerLevelInfo& levelInfo = info->levelInfo[current_level - 1];
-                    for (int i = 0; i < MAX_STATS; i++)
-                        levelInfo.stats[i] = fields[i + 2].GetUInt16() + itr->second.raceStats[i];
+                    for (int i = 0; i < MAX_STATS; ++i)
+                        levelInfo.stats[i] = fields[i + 2].GetUInt16() + raceStatModifiers[race].StatModifier[i];
                 }
             }
 
@@ -3780,7 +3775,6 @@ void ObjectMgr::LoadPlayerInfo()
         }
         while (result->NextRow());
 
-        raceStatStore.clear();
 
         // Fill gaps and check integrity
         for (int race = 0; race < MAX_RACES; ++race)
@@ -9730,12 +9724,6 @@ CreatureBaseStats const* ObjectMgr::GetCreatureBaseStats(uint8 level, uint8 unit
     {
         DefaultCreatureBaseStats()
         {
-            BaseArmor = 1;
-            for (uint8 j = 0; j < MAX_EXPANSIONS; ++j)
-            {
-                BaseHealth[j] = 1;
-                BaseDamage[j] = 0.0f;
-            }
             BaseMana = 0;
             AttackPower = 0;
             RangedAttackPower = 0;
@@ -9749,7 +9737,7 @@ void ObjectMgr::LoadCreatureClassLevelStats()
 {
     uint32 oldMSTime = getMSTime();
     //                                               0      1      2         3          4            5
-    QueryResult result = WorldDatabase.Query("SELECT level, class, basemana, basearmor, attackpower, rangedattackpower FROM creature_classlevelstats");
+    QueryResult result = WorldDatabase.Query("SELECT level, class, basemana, attackpower, rangedattackpower FROM creature_classlevelstats");
 
     if (!result)
     {
@@ -9770,22 +9758,11 @@ void ObjectMgr::LoadCreatureClassLevelStats()
 
         CreatureBaseStats stats;
 
-        for (uint8 i = 0; i < MAX_EXPANSIONS; ++i)
-        {
-            stats.BaseHealth[i] = GetGameTableColumnForClass(sNpcTotalHpGameTable[i].GetRow(Level), Class);
-            stats.BaseDamage[i] = GetGameTableColumnForClass(sNpcDamageByClassGameTable[i].GetRow(Level), Class);
-            if (stats.BaseDamage[i] < 0.0f)
-            {
-                TC_LOG_ERROR("sql.sql", "Creature base stats for class %u, level %u has invalid negative base damage[%u] - set to 0.0", Class, Level, i);
-                stats.BaseDamage[i] = 0.0f;
-            }
-        }
 
         stats.BaseMana = fields[2].GetUInt32();
-        stats.BaseArmor = fields[3].GetUInt32();
 
-        stats.AttackPower = fields[4].GetUInt16();
-        stats.RangedAttackPower = fields[5].GetUInt16();
+        stats.AttackPower = fields[3].GetUInt16();
+        stats.RangedAttackPower = fields[4].GetUInt16();
 
         _creatureBaseStatsStore[MAKE_PAIR16(Level, Class)] = stats;
 
