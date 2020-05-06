@@ -15,8 +15,8 @@ Every contributer will get an Ingame reward, but i do not know what, will think 
 ```SQL
 INSERT INTO creature_template_scaling (`Entry`, `LevelScalingMin`, `LevelScalingMax`)
 VALUES
-(525, 1, 60),
-(50039, 1, 60)
+(525, 1, 60), -- Elwynn Forest | mangy-wolf
+(50039, 1, 60) -- Elwynn Forest | Goblin Assassin
 --Copy the entry above and fill them like this ("mob id", "Intended minimal level", Intended maximal level")
 ON DUPLICATE KEY UPDATE Entry=VALUES(Entry),
 Entry=VALUES(Entry),
