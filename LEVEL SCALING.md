@@ -1,5 +1,8 @@
 # Level Scaling
 
+### What will you get?
+Every contributer will get an Ingame reward, but i do not know what, will think about that later
+
 ### what you have to do
 * Clone the Reposetory.
 * Open the LEVEL SCALING.md with a text editor of your choice.
