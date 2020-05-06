@@ -1,5 +1,6 @@
 sudo: false
 dist: bionic
+warnings_are_errors: false
 
 language: cpp
 compiler:
