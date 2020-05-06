@@ -24,3 +24,14 @@ Entry=VALUES(Entry),
 LevelScalingMin=VALUES(LevelScalingMin),
 LevelScalingMax=VALUES(LevelScalingMax)
 ```
+### How to Make a Pull request
+the simplest way is to:
+
+Find a project you want to contribute to
+Fork it
+Clone it to your local system
+Make a new branch
+Make your changes
+Push it back to your repo
+Click the Compare & pull request button
+Click Create pull request to open a new pull request
