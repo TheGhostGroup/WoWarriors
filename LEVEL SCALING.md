@@ -27,7 +27,7 @@ LevelScalingMax=VALUES(LevelScalingMax)
 ### How to Make a Pull request
 the simplest way is to:
 
-1. Fork it
+1. Fork my repo
 1. Clone it to your local system
 1. Make a new branch
 1. Make your changes
