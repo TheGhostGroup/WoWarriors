@@ -24,6 +24,11 @@ Entry=VALUES(Entry),
 LevelScalingMin=VALUES(LevelScalingMin),
 LevelScalingMax=VALUES(LevelScalingMax)
 ```
+
+### Possible Methods to get the ID´s
+* Using Wowhead in combination with the Wowhead client | [WowHead Client](https://www.wowhead.com/client)
+* Using the addon idTip | [idTip on CurseForge](https://www.curseforge.com/wow/addons/idtip)
+
 ### How to Make a Pull request
 the simplest way is to:
 
