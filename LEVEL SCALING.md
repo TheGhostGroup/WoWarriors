@@ -1,4 +1,19 @@
+# Level Scaling
 
+### What will you get?
+Every contributer will get an Ingame reward, but i do not know what, will think about that later
+
+### what you have to do
+* Clone the Reposetory.
+* Open the LEVEL SCALING.md with a text editor of your choice.
+* Gether the Id´s of every npc, thats not scaled correctly.
+* Add a line to the template below
+  * Pull request without the zone and mob name will not be merged
+* Make a pull request
+
+
+### SQL template
+```SQL
 INSERT INTO creature_template_scaling (`Entry`, `LevelScalingMin`, `LevelScalingMax`)
 VALUES
 
@@ -41,4 +56,19 @@ ON DUPLICATE KEY UPDATE Entry=VALUES(Entry),
 Entry=VALUES(Entry),
 LevelScalingMin=VALUES(LevelScalingMin),
 LevelScalingMax=VALUES(LevelScalingMax)
+```
 
+### Possible Methods to get the ID´s
+* Using Wowhead in combination with the Wowhead client | [WowHead Client](https://www.wowhead.com/client)
+* Using the addon idTip | [idTip on CurseForge](https://www.curseforge.com/wow/addons/idtip)
+
+### How to Make a Pull request
+the simplest way is to:
+
+1. Fork my repo
+1. Clone it to your local system
+1. Make a new branch
+1. Make your changes
+1. Push it back to your repo
+1. Click the Compare & pull request button
+1. Click Create pull request to open a new pull request
