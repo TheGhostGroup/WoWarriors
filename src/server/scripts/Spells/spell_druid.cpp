@@ -1107,7 +1107,7 @@ enum MoonfireSpells
 };
 
 // Moonfire - 8921
-// @Version : 7.1.0.22908
+// @Version : 8.3.0
 class spell_dru_moonfire : public SpellScriptLoader
 {
 public:
@@ -1117,17 +1117,23 @@ public:
     {
         PrepareSpellScript(spell_dru_moonfire_SpellScript);
 
-        void HandleOnHit(SpellEffIndex /*effIndex*/)
+        void HandleDamage(SpellEffIndex /*effIndex*/)
         {
             Unit* caster = GetCaster();
             Unit* target = GetHitUnit();
+
+            int32 damage = GetHitDamage();
+		    
             if (caster != target)
-                caster->CastSpell(target, SPELL_DRUID_MOONFIRE_DAMAGE, true);
+                if (caster->CastSpell(target, SPELL_DRUID_MOONFIRE_DAMAGE, true))
+                    AddPct(damage, sSpellMgr->GetSpellInfo(SPELL_DRUID_MOONFIRE_DAMAGE)->GetEffect(EFFECT_0)->BasePoints);
+
+            SetHitDamage(damage);
         }
 
         void Register() override
         {
-            OnEffectHitTarget += SpellEffectFn(spell_dru_moonfire_SpellScript::HandleOnHit, EFFECT_0, SPELL_EFFECT_DUMMY);
+            OnEffectHitTarget += SpellEffectFn(spell_dru_moonfire_SpellScript::HandleDamage, EFFECT_0, SPELL_EFFECT_DUMMY);
         }
     };
 
@@ -2478,6 +2484,7 @@ private:
 };
 
 // Shred - 5221
+// @Version : 8.3.0
 class spell_dru_shred : public SpellScript
 {
     PrepareSpellScript(spell_dru_shred);
