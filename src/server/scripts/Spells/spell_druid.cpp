@@ -2512,7 +2512,7 @@ class spell_dru_shred : public SpellScript
             chance *= 2.0f;
     }
 
-    void HandleOnEffectHitTarget(SpellEffIndex /*effIndex*/)
+    void HandleDamage(SpellEffIndex /*effIndex*/)
     {
         Unit* caster = GetCaster();
         Unit* target = GetHitUnit();
@@ -2523,12 +2523,12 @@ class spell_dru_shred : public SpellScript
 
         // If caster is level >= 56, While stealthed or have Incarnation: King of the Jungle aura,
         // deals 50% increased damage (get value from the spell data)
-        if ((m_casterLevel >= 56) && (m_stealthed || m_incarnation))
-            AddPct(damage, sSpellMgr->GetSpellInfo(SPELL_DRUID_SHRED)->GetEffect(EFFECT_3)->BasePoints);
+        if ((caster->HasAura(231057)) && (m_stealthed || m_incarnation))
+            AddPct(damage, sSpellMgr->GetSpellInfo(SPELL_DRUID_SHRED)->GetEffect(EFFECT_2)->BasePoints);
 
         // If caster is level >= 44 and the target is bleeding, deals 20% increased damage (get value from the spell data)
-        if ((m_casterLevel >= 44) && target->HasAuraState(AURA_STATE_BLEEDING))
-            AddPct(damage, sSpellMgr->GetSpellInfo(SPELL_DRUID_SHRED)->GetEffect(EFFECT_4)->BasePoints);
+        if (caster->HasAura(231063) && target->HasAuraState(AURA_STATE_BLEEDING))
+            AddPct(damage, sSpellMgr->GetSpellInfo(SPELL_DRUID_SHRED)->GetEffect(EFFECT_3)->BasePoints);
 
         SetHitDamage(damage);
     }
@@ -2536,7 +2536,7 @@ class spell_dru_shred : public SpellScript
     void Register() override
     {
         OnCalcCritChance += SpellOnCalcCritChanceFn(spell_dru_shred::HandleCritChance);
-        OnEffectHitTarget += SpellEffectFn(spell_dru_shred::HandleOnEffectHitTarget, EFFECT_4, SPELL_EFFECT_DUMMY);
+        OnEffectHitTarget += SpellEffectFn(spell_dru_shred::HandleDamage, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
     }
 
 private:
