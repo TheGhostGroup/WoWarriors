@@ -2835,6 +2835,9 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
         ItemDurationList m_itemDuration;
         GuidUnorderedSet m_itemSoulboundTradeable;
 
+        void ResetTimeSync();
+        void SendTimeSync();
+
         std::unique_ptr<ResurrectionData> _resurrectionData;
 
         WorldSession* m_session;
