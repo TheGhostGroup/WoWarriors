@@ -488,6 +488,23 @@ class spell_warlock_command_demon : public SpellScriptLoader
         }
 };
 
+//Create Healtstone - 23517
+
+class spell_warlock_create_healthstone : public SpellScriptLoader
+{
+    public:
+        spell_warlock_create_healthstone() : SpellScriptLoader("spell_warlock_create_healthstone") { }
+
+        class spell_warlock_create_healthstone_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_warlock_create_healthstone_SpellScript);
+
+            Unit* caster = GetCaster();
+
+            
+        };
+};
+
 // Dark Bargain - 110913
 class spell_warlock_dark_bargain : public SpellScriptLoader
 {
