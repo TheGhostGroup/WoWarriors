@@ -2,7 +2,6 @@
 
 --------------
 
-* [Build Status](#build-status)
 * [Introduction](#introduction)
 * [Requirements](#requirements)
 * [Install](#install)
@@ -11,11 +10,6 @@
 * [Copyright](#copyright)
 * [Authors &amp; Contributors](#authors--contributors)
 * [Links](#links)
-
-## Build Status
-
-[![Build Status](https://travis-ci.com/DuelistRag3/WoWarriors.svg?branch=Magni)](https://travis-ci.com/DuelistRag3/WoWarriors)
-[![Build status](https://ci.appveyor.com/api/projects/status/kb0wjxh3va9c3e0k/branch/master?svg=true)](https://ci.appveyor.com/project/Traesh/ashamanecore/branch/master)
 
 
 ## Introduction
