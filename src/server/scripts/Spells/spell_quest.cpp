@@ -126,6 +126,24 @@ public:
     }
 };
 
+// 47181 The Smoking Gun
+/*
+enum Quest47181Data
+{
+    SPELL_SHOOT_PISTOL = 274574
+};
+
+class spell_47181_the_smoking_gun : public SpellScriptLoader
+{
+public:
+    spell_47181_the_smoking_gun() : SpellScriptLoader("spell_47181_the_smoking_gun") { }
+
+    class spell_47181_the_smoking_gun_SpellScipt : public SpellScript
+    {
+        PrepareSpellScript(spell_47181_the_smoking_gun_SpellScript);
+    };
+};*/
+
 // http://www.wowhead.com/quest=5206 Marauders of Darrowshire
 // 17271 Test Fetid Skull
 enum Quest5206Data
@@ -2756,6 +2774,7 @@ public:
 
 void AddSC_quest_spell_scripts()
 {
+    //new spell_47181_the_smoking_gun();
     new spell_q55_sacred_cleansing();
     new spell_q2203_thaumaturgy_channel();
     new spell_q5206_test_fetid_skull();
