@@ -307,6 +307,11 @@ void HotfixDatabaseConnection::DoPrepareStatements()
     PrepareStatement(HOTFIX_SEL_CONVERSATION_LINE, "SELECT ID, BroadcastTextID, SpellVisualKitID, AdditionalDuration, NextConversationLineID, "
         "AnimKitID, SpeechType, StartAnimation, EndAnimation FROM conversation_line ORDER BY ID DESC", CONNECTION_SYNCH);
 
+    // CorruptionEffects.db2
+    PrepareStatement(HOTFIX_SEL_CORRUPTION_EFFECTS, "SELECT ID, MinCorruption, Aura, PlayerConditionID, Flags FROM corruption_effects"
+        " WHERE (`VerifiedBuild` > 0) = ?", CONNECTION_SYNCH);
+    PREPARE_MAX_ID_STMT(HOTFIX_SEL_CORRUPTION_EFFECTS, "SELECT MAX(ID) + 1 FROM corruption_effects", CONNECTION_SYNCH);
+
     // CreatureDisplayInfo.db2
     PrepareStatement(HOTFIX_SEL_CREATURE_DISPLAY_INFO, "SELECT ID, ModelID, SoundID, SizeClass, CreatureModelScale, CreatureModelAlpha, BloodID, "
         "ExtendedDisplayInfoID, NPCSoundID, ParticleColorID, PortraitCreatureDisplayInfoID, PortraitTextureFileDataID, ObjectEffectPackageID, "
