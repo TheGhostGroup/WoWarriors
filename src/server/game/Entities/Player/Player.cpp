@@ -1264,6 +1264,15 @@ void Player::Update(uint32 p_time)
             m_zoneUpdateTimer -= p_time;
     }
 
+        if (m_timeSyncTimer > 0 && !IsBeingTeleportedFar())
+    {
+        if (p_time >= m_timeSyncTimer)
+            SendTimeSync();
+        else
+            m_timeSyncTimer -= p_time;
+    }
+
+
     if (IsAlive())
     {
         m_regenTimer += p_time;
@@ -5241,10 +5250,10 @@ inline float GetGameTableColumnForCombatRating(GtCombatRatingsEntry const* row, 
             return row->CritRanged;
         case CR_CRIT_SPELL:
             return row->CritSpell;
-        case CR_MULTISTRIKE:
-            return row->MultiStrike;
-        case CR_READINESS:
-            return row->Readiness;
+        case CR_CORRUPTION:
+            return row->Corruption;
+        case CR_CORRUPTION_RESISTANCE:
+            return row->CorruptionResistance;
         case CR_SPEED:
             return row->Speed;
         case CR_RESILIENCE_CRIT_TAKEN:
@@ -5393,8 +5402,10 @@ void Player::UpdateRating(CombatRating cr)
             if (affectStats)
                 UpdateSpellCritChance();
             break;
-        case CR_MULTISTRIKE:
-        case CR_READINESS:
+        case CR_CORRUPTION:
+        case CR_CORRUPTION_RESISTANCE:
+            UpdateCorruption();
+            break;
         case CR_SPEED:
         case CR_RESILIENCE_PLAYER_DAMAGE:
         case CR_RESILIENCE_CRIT_TAKEN:
@@ -7973,14 +7984,11 @@ void Player::_ApplyItemBonuses(Item* item, uint8 slot, bool apply)
             case ITEM_MOD_PVP_POWER:
                 ApplyRatingMod(CR_PVP_POWER, int32(val), apply);
                 break;
-            case ITEM_MOD_CR_AMPLIFY:
-                ApplyRatingMod(CR_AMPLIFY, int32(val), apply);
+            case ITEM_MOD_CORRUPTION:
+                ApplyRatingMod(CR_CORRUPTION, int32(val), apply);
                 break;
-            case ITEM_MOD_CR_MULTISTRIKE:
-                ApplyRatingMod(CR_MULTISTRIKE, int32(val), apply);
-                break;
-            case ITEM_MOD_CR_READINESS:
-                ApplyRatingMod(CR_READINESS, int32(val * combatRatingMultiplier), apply);
+            case ITEM_MOD_CORRUPTION_RESISTANCE:
+                ApplyRatingMod(CR_CORRUPTION_RESISTANCE, int32(val), apply);
                 break;
             case ITEM_MOD_CR_SPEED:
                 ApplyRatingMod(CR_SPEED, int32(val * combatRatingMultiplier), apply);
@@ -7993,15 +8001,6 @@ void Player::_ApplyItemBonuses(Item* item, uint8 slot, bool apply)
                 break;
             case ITEM_MOD_CR_STURDINESS:
                 ApplyRatingMod(CR_STURDINESS, int32(val * combatRatingMultiplier), apply);
-                break;
-            case ITEM_MOD_CR_UNUSED_7:
-                ApplyRatingMod(CR_UNUSED_7, int32(val), apply);
-                break;
-            case ITEM_MOD_CR_CLEAVE:
-                ApplyRatingMod(CR_CLEAVE, int32(val), apply);
-                break;
-            case ITEM_MOD_CR_UNUSED_12:
-                ApplyRatingMod(CR_UNUSED_12, int32(val), apply);
                 break;
             case ITEM_MOD_AGI_STR_INT:
                 HandleStatModifier(UNIT_MOD_STAT_AGILITY, BASE_VALUE, float(val), apply);
@@ -19466,9 +19465,10 @@ void Player::_LoadInventory(PreparedQueryResult result, PreparedQueryResult arti
                     }
                     else
                     {
-                        item->DeleteFromDB(trans);
+                        TC_LOG_ERROR("entities.player", "Player::_LoadInventory: Player '%s' (%s) has child item (%s, entry: %u) which can't be loaded into inventory because parent item was not found (Bag %s, slot: %u). Item will be sent by mail.",
+                            GetName().c_str(), GetGUID().ToString().c_str(), item->GetGUID().ToString().c_str(), item->GetEntry(), bagGuid.ToString().c_str(), slot);
                         item->DeleteFromInventoryDB(trans);
-                        delete item;
+                        problematicItems.push_back(item);
                         continue;
                     }
                 }
@@ -24723,10 +24723,10 @@ void Player::SendInitialPacketsBeforeAddToMap()
     if (!(m_teleport_options & TELE_TO_SEAMLESS))
     {
         m_movementCounter = 0;
-        GetSession()->ResetTimeSync();
+        ResetTimeSync();
     }
 
-    GetSession()->SendTimeSync();
+    SendTimeSync();
 
     /// Pass 'this' as argument because we're not stored in ObjectAccessor yet
     GetSocial()->SendSocialList(this, SOCIAL_FLAG_ALL);
@@ -28277,6 +28277,31 @@ void Player::LoadActions(PreparedQueryResult result)
 
     SendActionButtons(1);
 }
+
+void Player::ResetTimeSync()
+{
+    m_timeSyncTimer = 0;
+    m_timeSyncClient = 0;
+    m_timeSyncServer = GameTime::GetGameTimeMS();
+}
+
+void Player::SendTimeSync()
+{
+    m_timeSyncQueue.push(m_movementCounter++);
+
+    WorldPackets::Misc::TimeSyncRequest packet;
+    packet.SequenceIndex = m_timeSyncQueue.back();
+    SendDirectMessage(packet.Write());
+
+    // Schedule next sync in 10 sec
+    m_timeSyncTimer = 10000;
+    m_timeSyncServer = GameTime::GetGameTimeMS();
+
+    if (m_timeSyncQueue.size() > 3)
+        TC_LOG_ERROR("network", "Player::SendTimeSync: Did not receive CMSG_TIME_SYNC_RESP for over 30 seconds from '%s' (%s), possible cheater",
+            GetName().c_str(), GetGUID().ToString().c_str());
+}
+
 
 void Player::SetReputation(uint32 factionentry, int32 value)
 {

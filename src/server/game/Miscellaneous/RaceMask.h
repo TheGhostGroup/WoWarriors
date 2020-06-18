@@ -23,18 +23,18 @@
 
 enum Races
 {
-    RACE_NONE = 0,
-    RACE_HUMAN = 1,
-    RACE_ORC = 2,
-    RACE_DWARF = 3,
-    RACE_NIGHTELF = 4,
-    RACE_UNDEAD_PLAYER = 5,
-    RACE_TAUREN = 6,
-    RACE_GNOME = 7,
-    RACE_TROLL = 8,
-    RACE_GOBLIN = 9,
-    RACE_BLOODELF = 10,
-    RACE_DRAENEI = 11,
+    RACE_NONE                   = 0,
+    RACE_HUMAN                  = 1,
+    RACE_ORC                    = 2,
+    RACE_DWARF                  = 3,
+    RACE_NIGHTELF               = 4,
+    RACE_UNDEAD_PLAYER          = 5,
+    RACE_TAUREN                 = 6,
+    RACE_GNOME                  = 7,
+    RACE_TROLL                  = 8,
+    RACE_GOBLIN                 = 9,
+    RACE_BLOODELF               = 10,
+    RACE_DRAENEI                = 11,
     //RACE_FEL_ORC              = 12,
     //RACE_NAGA                 = 13,
     //RACE_BROKEN               = 14,
@@ -45,22 +45,22 @@ enum Races
     //RACE_TAUNKA               = 19,
     //RACE_NORTHREND_SKELETON   = 20,
     //RACE_ICE_TROLL            = 21,
-    RACE_WORGEN = 22,
+    RACE_WORGEN                 = 22,
     //RACE_GILNEAN              = 23,
-    RACE_PANDAREN_NEUTRAL = 24,
-    RACE_PANDAREN_ALLIANCE = 25,
-    RACE_PANDAREN_HORDE = 26,
-    RACE_NIGHTBORNE = 27,
-    RACE_HIGHMOUNTAIN_TAUREN = 28,
-    RACE_VOID_ELF = 29,
-    RACE_LIGHTFORGED_DRAENEI = 30,
-    RACE_ZANDALARI_TROLL = 31,
-    RACE_KUL_TIRAN = 32,
+    RACE_PANDAREN_NEUTRAL       = 24,
+    RACE_PANDAREN_ALLIANCE      = 25,
+    RACE_PANDAREN_HORDE         = 26,
+    RACE_NIGHTBORNE             = 27,
+    RACE_HIGHMOUNTAIN_TAUREN    = 28,
+    RACE_VOID_ELF               = 29,
+    RACE_LIGHTFORGED_DRAENEI    = 30,
+    RACE_ZANDALARI_TROLL        = 31,
+    RACE_KUL_TIRAN              = 32,
     //RACE_THIN_HUMAN           = 33,
-    RACE_DARK_IRON_DWARF = 34, // RaceMask bit 11
-    RACE_VULPERA = 35, // RaceMask bit 12
-    RACE_MAGHAR_ORC = 36, // RaceMask bit 13
-    RACE_MECHAGNOME = 37  // RaceMask bit 14
+    RACE_DARK_IRON_DWARF        = 34, // RaceMask bit 11
+    RACE_VULPERA                = 35, // RaceMask bit 12
+    RACE_MAGHAR_ORC             = 36, // RaceMask bit 13
+    RACE_MECHAGNOME             = 37  // RaceMask bit 14
 };
 
 // max+1 for player race

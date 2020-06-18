@@ -21,6 +21,11 @@
 #include "HotfixDatabase.h"
 #include "MySQLPreparedStatement.h"
 
+// Force max id statements to appear exactly right after normal data fetch statement
+#define PREPARE_MAX_ID_STMT(stmtBase, sql, con) \
+    static_assert(stmtBase + 1 == stmtBase##_MAX_ID, "Invalid prepared statement index for " #stmtBase "_MAX_ID"); \
+    PrepareStatement(stmtBase##_MAX_ID, sql, con);
+
 // Force locale statments to appear exactly in locale declaration order, right after normal data fetch statement
 #define PREPARE_LOCALE_STMT(stmtBase, sql, con) \
     static_assert(stmtBase + 1 == stmtBase##_LOCALE, "Invalid prepared statement index for " #stmtBase "_LOCALE"); \
@@ -306,6 +311,11 @@ void HotfixDatabaseConnection::DoPrepareStatements()
     // ConversationLine.db2
     PrepareStatement(HOTFIX_SEL_CONVERSATION_LINE, "SELECT ID, BroadcastTextID, SpellVisualKitID, AdditionalDuration, NextConversationLineID, "
         "AnimKitID, SpeechType, StartAnimation, EndAnimation FROM conversation_line ORDER BY ID DESC", CONNECTION_SYNCH);
+
+    // CorruptionEffects.db2
+    PrepareStatement(HOTFIX_SEL_CORRUPTION_EFFECTS, "SELECT ID, MinCorruption, Aura, PlayerConditionID, Flags FROM corruption_effects"
+        " WHERE (`VerifiedBuild` > 0) = ?", CONNECTION_SYNCH);
+    PREPARE_MAX_ID_STMT(HOTFIX_SEL_CORRUPTION_EFFECTS, "SELECT MAX(ID) + 1 FROM corruption_effects", CONNECTION_SYNCH);
 
     // CreatureDisplayInfo.db2
     PrepareStatement(HOTFIX_SEL_CREATURE_DISPLAY_INFO, "SELECT ID, ModelID, SoundID, SizeClass, CreatureModelScale, CreatureModelAlpha, BloodID, "

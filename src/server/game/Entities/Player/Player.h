@@ -1890,6 +1890,7 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
         void UpdateLeechPercentage();
 
         void UpdateSpellCritChance();
+        void UpdateCorruption();
         void UpdateArmorPenetration(int32 amount);
         void UpdateExpertise(WeaponAttackType attType);
         void ApplyManaRegenBonus(int32 amount, bool apply);
@@ -2834,6 +2835,9 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
         EnchantDurationList m_enchantDuration;
         ItemDurationList m_itemDuration;
         GuidUnorderedSet m_itemSoulboundTradeable;
+
+        void ResetTimeSync();
+        void SendTimeSync();
 
         std::unique_ptr<ResurrectionData> _resurrectionData;
 
