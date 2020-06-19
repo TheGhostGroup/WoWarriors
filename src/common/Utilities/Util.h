@@ -77,21 +77,14 @@ inline T CalculatePct(T base, U pct)
     return T(base * static_cast<float>(pct) / 100.0f);
 }
 
-template <class T>
-inline float GetPctOf(T value, T max)
-{
-    ASSERT(max && value <= max);
-    return float(static_cast<float>(value) / static_cast<float>(max) * 100.0f);
-}
-
 template <class T, class U>
-inline T AddPct(T &base, U pct)
+inline T AddPct(T& base, U pct)
 {
     return base += CalculatePct(base, pct);
 }
 
 template <class T, class U>
-inline T ApplyPct(T &base, U pct)
+inline T ApplyPct(T& base, U pct)
 {
     return base = CalculatePct(base, pct);
 }

@@ -4994,26 +4994,6 @@ void AuraEffect::HandleAuraLinked(AuraApplication const* aurApp, uint8 mode, boo
     }
 }
 
-void AuraEffect::HandleTriggerSpellOnPowerPercent(AuraApplication const* aurApp, uint8 mode, bool apply) const
-{
-    if (!(mode & AURA_EFFECT_HANDLE_REAL))
-        return;
-
-    if (!apply)
-        return;
-
-    Unit* target = aurApp->GetTarget();
-
-    uint32 powerAmount = target->GetPower(Powers(GetMiscValue()));
-    uint32 maxPowerAmount = target->GetMaxPower(Powers(GetMiscValue()));
-
-    float powerAmountPct = GetPctOf(powerAmount, std::max(powerAmount, maxPowerAmount));
-
-    if ((GetMiscValueB() == POWER_PROC_UPPER && powerAmountPct >= GetAmount()) ||
-        (GetMiscValueB() == POWER_PROC_LOWER && powerAmountPct <= GetAmount()))
-        target->CastSpell(target, GetSpellEffectInfo()->TriggerSpell, true);
-}
-
 void AuraEffect::HandleTriggerSpellOnPowerAmount(AuraApplication const* aurApp, uint8 mode, bool apply) const
 {
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
