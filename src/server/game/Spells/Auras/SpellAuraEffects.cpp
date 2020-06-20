@@ -393,7 +393,7 @@ NonDefaultConstructible<pAuraEffectHandler> AuraEffectHandler[TOTAL_AURAS]=
     &AuraEffect::HandleUnused,                                    //325 SPELL_AURA_LEARN_PVP_TALENT
     &AuraEffect::HandlePhaseGroup,                                //326 SPELL_AURA_PHASE_GROUP
     &AuraEffect::HandleUnused,                                    //327 unused (4.3.4)
-    &AuraEffect::HandleTriggerSpellOnPowerPercent,                //328 SPELL_AURA_TRIGGER_SPELL_ON_POWER_PCT
+    &AuraEffect::HandleNULL,                                      //328 SPELL_AURA_TRIGGER_SPELL_ON_POWER_PCT
     &AuraEffect::HandleNULL,                                      //329 SPELL_AURA_MOD_POWER_GAIN_PCT
     &AuraEffect::HandleNoImmediateEffect,                         //330 SPELL_AURA_CAST_WHILE_WALKING
     &AuraEffect::HandleAuraForceWeather,                          //331 SPELL_AURA_FORCE_WEATHER
@@ -4992,26 +4992,6 @@ void AuraEffect::HandleAuraLinked(AuraApplication const* aurApp, uint8 mode, boo
         if (Aura* triggeredAura = target->GetAura(triggeredSpellId, casterGUID))
             triggeredAura->ModStackAmount(GetBase()->GetStackAmount() - triggeredAura->GetStackAmount());
     }
-}
-
-void AuraEffect::HandleTriggerSpellOnPowerPercent(AuraApplication const* aurApp, uint8 mode, bool apply) const
-{
-    if (!(mode & AURA_EFFECT_HANDLE_REAL))
-        return;
-
-    if (!apply)
-        return;
-
-    Unit* target = aurApp->GetTarget();
-
-    uint32 powerAmount = target->GetPower(Powers(GetMiscValue()));
-    uint32 maxPowerAmount = target->GetMaxPower(Powers(GetMiscValue()));
-
-    float powerAmountPct = GetPctOf(powerAmount, std::max(powerAmount, maxPowerAmount));
-
-    if ((GetMiscValueB() == POWER_PROC_UPPER && powerAmountPct >= GetAmount()) ||
-        (GetMiscValueB() == POWER_PROC_LOWER && powerAmountPct <= GetAmount()))
-        target->CastSpell(target, GetSpellEffectInfo()->TriggerSpell, true);
 }
 
 void AuraEffect::HandleTriggerSpellOnPowerAmount(AuraApplication const* aurApp, uint8 mode, bool apply) const

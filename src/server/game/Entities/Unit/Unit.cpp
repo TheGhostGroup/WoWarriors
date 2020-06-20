@@ -10165,8 +10165,6 @@ void Unit::SetPower(Powers power, int32 val)
         SendMessageToSet(packet.Write(), GetTypeId() == TYPEID_PLAYER);
     }
 
-    CheckPowerProc(power, oldPower, val);
-
     if (ToPlayer())
         sScriptMgr->OnModifyPower(ToPlayer(), power, oldPower, val, false, true);
 
@@ -10206,38 +10204,6 @@ void Unit::SetMaxPower(Powers power, int32 val)
 
     if (val < cur_power)
         SetPower(power, val);
-}
-
-void Unit::CheckPowerProc(Powers power, int32 oldVal, int32 newVal)
-{
-    CheckPowerProc(power, oldVal, newVal, GetAuraEffectsByType(SPELL_AURA_TRIGGER_SPELL_ON_POWER_PCT));
-    CheckPowerProc(power, oldVal, newVal, GetAuraEffectsByType(SPELL_AURA_TRIGGER_SPELL_ON_POWER_AMOUNT));
-}
-
-void Unit::CheckPowerProc(Powers power, int32 oldVal, int32 newVal, AuraEffectList effects)
-{
-    for (AuraEffect* effect : effects)
-    {
-        if (effect->GetMiscValue() == power)
-        {
-            float oldValueCheck = oldVal;
-            float newValueCheck = newVal;
-
-            if (effect->GetAuraType() == SPELL_AURA_TRIGGER_SPELL_ON_POWER_PCT)
-            {
-                if (int32 maxPower = GetMaxPower(power))
-                {
-                    oldValueCheck = GetPctOf(oldVal, maxPower);
-                    newValueCheck = GetPctOf(newVal, maxPower);
-                }
-            }
-
-            uint32 effectAmount = effect->GetAmount();
-            if ((effect->GetMiscValueB() == POWER_PROC_UPPER && oldValueCheck < effectAmount && newValueCheck >= effectAmount) ||
-                (effect->GetMiscValueB() == POWER_PROC_LOWER && oldValueCheck > effectAmount && newValueCheck <= effectAmount))
-                CastSpell(this, effect->GetSpellEffectInfo()->TriggerSpell, true);
-        }
-    }
 }
 
 int32 Unit::GetCreatePowers(Powers power) const
