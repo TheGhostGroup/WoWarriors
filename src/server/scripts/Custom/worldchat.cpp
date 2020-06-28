@@ -59,7 +59,7 @@ public:
             break;
 
         case SEC_CON:
-            snprintf(message, 1024, "[World][Vip][%s%s|r]: %s%s|r", MSG_COLOR_WHITE, player->GetName().c_str(), MSG_COLOR_PURPLE, msg);
+            snprintf(message, 1024, "[World][Contributer][%s%s|r]: %s%s|r", MSG_COLOR_WHITE, player->GetName().c_str(), MSG_COLOR_PURPLE, msg);
             sWorld->SendGlobalText(message, NULL);
             break;
 
