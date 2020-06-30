@@ -11,9 +11,9 @@
 #include "ScriptPCH.h"
 #include "Chat.h"
 #include "Common.h"
+#include "RBAC.h"
 #include "World.h"
 #include "WorldSession.h"
-#include "rbac.h"
 
 /* Colors */
 #define MSG_COLOR_ORANGE "|cffFFA500"
