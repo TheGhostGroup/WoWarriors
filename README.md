@@ -102,3 +102,4 @@ Read file [AUTHORS](AUTHORS).
 * [Website](https://www.world-of-warriors.de/news)
 * [Wiki](https://www.trinitycore.info)
 * [Forums](https://community.trinitycore.org)
+* [Disocrd](https://discord.gg/8w2Y2K)
