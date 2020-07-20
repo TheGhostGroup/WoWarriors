@@ -133,7 +133,7 @@ enum RBACPermissions
     RBAC_PERM_COMMAND_ACCOUNT_PASSWORD                       = 225,
     RBAC_PERM_COMMAND_ACCOUNT_SET                            = 226,
     RBAC_PERM_COMMAND_ACCOUNT_SET_ADDON                      = 227,
-    RBAC_PERM_COMMAND_ACCOUNT_SET_GMLEVEL                    = 228,
+    RBAC_PERM_COMMAND_ACCOUNT_SET_SECLEVEL                   = 228,
     RBAC_PERM_COMMAND_ACCOUNT_SET_PASSWORD                   = 229,
     RBAC_PERM_COMMAND_ACHIEVEMENT                            = 230,
     RBAC_PERM_COMMAND_ACHIEVEMENT_ADD                        = 231,
@@ -781,6 +781,7 @@ enum RBACPermissions
     // IF YOU ADD NEW PERMISSIONS, ADD THEM IN 3.3.5 BRANCH AS WELL!
     //
     // custom permissions 1000+
+    RBAC_PERM_COMMAND_WORLD_CHAT                             = 1009,
     // ashamane permissions 2000+
     RBAC_PERM_COMMAND_DEBUG_MOVEMENT_FORCE = 2000,
     RBAC_PERM_COMMAND_DEBUG_APPLY_MOVEMENT_FORCE = 2001,
